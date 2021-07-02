@@ -54,6 +54,7 @@
     background-color: white;
     margin-bottom: 10px;
     border-radius: 5px;
+    height: 6em;
 }
 
 #display {
@@ -62,6 +63,16 @@
     padding: 5px;
     height: 1em;
     margin: 7px;
+    margin-top: 0px;
+}
+
+#smaller-display {
+    text-align: right;
+    padding: 5px;
+    margin: 0px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 0px;
 }
 
 
