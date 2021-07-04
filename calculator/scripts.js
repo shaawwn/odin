@@ -56,7 +56,7 @@ class Calculator {
 
 
 }
-
+// Testing token
 let digits = document.querySelectorAll('.digit')
 let operators = document.querySelectorAll('.operator')
 let allclear = document.getElementsByName('allclear')[0]
