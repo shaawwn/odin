@@ -1,135 +1,131 @@
 console.log("Scripts loading...")
-let num1 = 0;
-let num2 = 0;
-let solution;
-let operator;
+// Get all the buttons
 
-// Operation functions
-
-function add(a, b) {
-    return a + b
-}
-
-function subtract(a, b) {
-    return a - b
-}
-
-function multiply(a, b) {
-    return a * b
-}
-
-function divide(a, b) {
-    return a / b
-}
-
-function operate(operation, a, b) {
-    if (operation == 'add') {
-        return add(a, b)
+// Lets try a class
+class Calculator {
+    constructor(currentOperand, previousOperand) {
+        this.currentOperand = currentOperand
+        this.previousOperand = previousOperand
+        this.operator = undefined
+        this.clear()
     }
-    // return operation(a, b);
 
-}
+    clear() {
+        this.currentOperand = '';
+        this.previousOperand = '';
+        this.operator = undefined
+        calcDisplay.innerText = '0'
+        operDisplay.innerText = '';
 
+    }
 
-function outPutToDisplay(toDisplay) {
-
-    if (toDisplay.match(/^[0-9]+$/i)) {
-        if (document.querySelector('#display').innerText === '0') {
-            document.querySelector('#display').innerText = '';
+    operate() {
+        if (this.operator === '+') {
+            return this.currentOperand + this.previousOperand
         }
-        document.querySelector('#display').innerText += toDisplay
+        if (this.operator === '-') {
+            return this.previousOperand - this.currentOperand
+        }
+        if (this.operator === '÷') {
+            if (this.currentOperand === 0) {
+                this.clear()
+                return 'Zero Division'
+            }
+            return this.previousOperand / this.currentOperand
+        }
+        if (this.operator === 'x') {
+            return this.currentOperand * this.previousOperand
+        }
     }
-}
 
-function buttonPress() {
-    // Displays a concatonated number as you press digit buttons
-    let display = document.querySelector('#display')
-    display.innerText = '';
-    let button = document.addEventListener('click', (e) => {
-        if (e.target.innerText.match(/^[0-9]+$/i)) {
-            outPutToDisplay(e.target.innerText)
-        } 
-        // return parseInt(e.target.innerText)
-    })
-}
+    updateDisplay(number) {
+        if (calcDisplay.innerText === '0' || calcDisplay.innerText === 'Zero Division') {
+            calcDisplay.innerText = number
+        } else if (calculator.previousOperand !== '' && calculator.currentOperand != '') {
+            calcDisplay.innerText = number
+        } else {
+            calcDisplay.innerText += number
+        }
 
-function addOperators() {
-    // Add operators to operator buttons
-
-    document.getElementsByName('divide')[0].addEventListener('click', () => {
-        console.log("Dividing!")
-    })
-    document.getElementsByName('add')[0].addEventListener('click', () => {
-        // Capture the first number and the current operation
-        console.log("Adding!")
-
-    })
-    document.getElementsByName('subtract')[0].addEventListener('click', () => {
-        console.log("Subtracting!")
-    })
-    document.getElementsByName('multiply')[0].addEventListener('click', () => {
-        console.log("Multiplying!")
-    })
-
-    // Clear functions
-    document.getElementsByName('allclear')[0].addEventListener('click', () => {
-        // Completely clear all numbers
-        num1 = 0;
-        num2 = 0;
-        solution = 0;
-        console.log(num1, num2)
-        document.querySelector('#display').innerText = 0;
-    })
-
-    document.getElementsByName('clear')[0].addEventListener('click', () => {
-        // Clear num1 and num2 but keep solution 
- 
-        num1 = 0;
-        num2 = 0;
-        document.querySelector('#display').textContent = 0;
-    })
-    
-}
-
-function clearNumbers(num1, num2) {
-    num1 = 0;
-    num2 = 0;
-    let nums = [num1, num2]
-    return nums 
-}
+        if (operDisplay.innerText !== '') {
+            // Needs to clear out old numbers instead of just concatonating 
+            operDisplay.innerText = calculator.previousOperand + calculator.operator + calcDisplay.innerText
+        }
+    }
 
 
-function getSecondNum(number) {
-    let display = document.querySelector('#display')
-    display.innerText = '';
-    buttonPress()
 
 }
 
-function calculate(operator, num) {
-    //Main function
-    console.log("Launching calculator")
+let digits = document.querySelectorAll('.digit')
+let operators = document.querySelectorAll('.operator')
+let allclear = document.getElementsByName('allclear')[0]
+let clear = document.getElementsByName('clear')[0]
+let equals = document.getElementById('equals')
+let currentOperand = '';
+let previousOperand = '';
+let calcDisplay = document.querySelector('#display')
+let operDisplay = document.querySelector('#smaller-display')
+// console.log(digits, operators, allclear, clear, equals)
 
-}
+const calculator = new Calculator()
+
+// Add digit updates to display
+digits.forEach(digit => {digit.addEventListener('click', () => {
+    // Make sure that if you keep typing an operator, the number updates properly
+    if (calculator.operator !== undefined) {
+        // calcDisplay.innerText = '';
+        calculator.updateDisplay(digit.innerText)
+    } else {
+        calculator.updateDisplay(digit.innerText)
+    }
+
+    // Previously, this was the only line in here
+    // calculator.updateDisplay(digit.innerText)
+})})
+
+// Add clear to clear button
+allclear.addEventListener('click', () => {
+    calculator.clear()
+})
+
+// Add operator listeners
+operators.forEach(operator => {operator.addEventListener('click', () => {
+    calculator.operator = operator.innerText
+
+    if (calcDisplay.innerText === '0') {
+        //pass
+        // console.log("Passing")
+    } else if (calcDisplay !== '' && calculator.previousOperand === '') {
+        calculator.previousOperand = parseInt(calcDisplay.innerText)
+        operDisplay.innerText = calculator.previousOperand + calculator.operator
+        calcDisplay.innerText = '0'
+    } else if(calcDisplay !== '' && calculator.previousOperand !== '') {
+        calculator.currentOperand = parseInt(calcDisplay.innerText)
+        solution = calculator.operate()
+        calcDisplay.innerText = solution
+        // At this point user should be able to start entering another
+        // number to add to the sequence of operations
+        calculator.previousOperand = solution
+    }
+
+})})
+
+// Add equals operation
+equals.addEventListener('click', () => {
+    if (calculator.currentOperand === '' && calculator.previousOperand === '') {
+        console.log("Not adding")
+    } else {
+        calculator.currentOperand = parseInt(calcDisplay.innerText)
+        solution = calculator.operate()
+        calcDisplay.innerText = solution;
+    }
+    calculator.currentOperand = '';
+    calculator.previousOperand = '';
+})
 
 
-function equals() {
-    
-    let equal = document.querySelector('#equals')
-    let display = document.querySelector('#display')
-    // solution = operate(operator, num1, num2)
-    // return solution
-    // Older
-    equal.addEventListener('click', () => {
-        solution = operate(operator, num1, num2)
-        display.innerText = '';
-        display.innerText = solution
-    })
-}
 
-equals()
-buttonPress()
-addOperators()
-outPutToDisplay('0')
-calculate()
+
+
 
