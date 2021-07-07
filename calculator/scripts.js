@@ -21,7 +21,7 @@ class Calculator {
 
     operate() {
         if (this.operator === '+') {
-            return this.currentOperand + this.previousOperand
+            return parseInt(this.currentOperand) + parseInt(this.previousOperand)
         }
         if (this.operator === '-') {
             return this.previousOperand - this.currentOperand
@@ -49,6 +49,7 @@ class Calculator {
 
         if (operDisplay.innerText !== '') {
             // Needs to clear out old numbers instead of just concatonating 
+            console.log("NOT UPDATING PROPERLY WHEN SEQUENCING")
             operDisplay.innerText = calculator.previousOperand + calculator.operator + calcDisplay.innerText
         }
     }
@@ -73,7 +74,8 @@ const calculator = new Calculator()
 // Add digit updates to display
 digits.forEach(digit => {digit.addEventListener('click', () => {
     // Make sure that if you keep typing an operator, the number updates properly
-    if (calculator.operator !== undefined) {
+
+    if (calculator.operator !== undefined && calculator.currentOperand !== '' && calculator.previousOperand !== '') {
         // calcDisplay.innerText = '';
         calculator.updateDisplay(digit.innerText)
     } else {
@@ -91,6 +93,23 @@ allclear.addEventListener('click', () => {
 
 // Add operator listeners
 operators.forEach(operator => {operator.addEventListener('click', () => {
+    // So the operator needs to operate BEFORE assigning a new operator
+    if (calculator.operator !== undefined) {
+        // After performing one operation, when user selects a new digit, begin new operation
+        // console.log("PROBLEM WITH UPDATING IN OPERATOR LOOP", calculator.previousOperand)
+        // Both operands are empty at this point
+        calculator.currentOperand = calcDisplay.innerText
+        solution = calculator.operate()
+
+        console.log("...", solution)
+        calcDisplay.innerText = solution
+        calculator.operator = operator.innerText
+        calculator.previousOperand = solution;
+        return
+    } else {
+        // DELETE IF/ELSE AND JUST THIS LINE 
+        calculator.operator = operator.innerText
+    }
     calculator.operator = operator.innerText
 
     if (calcDisplay.innerText === '0') {
@@ -107,21 +126,22 @@ operators.forEach(operator => {operator.addEventListener('click', () => {
         // At this point user should be able to start entering another
         // number to add to the sequence of operations
         calculator.previousOperand = solution
-    }
+    } 
 
 })})
 
 // Add equals operation
 equals.addEventListener('click', () => {
     if (calculator.currentOperand === '' && calculator.previousOperand === '') {
-        console.log("Not adding")
+        console.log("No operation when pressing equals")
     } else {
         calculator.currentOperand = parseInt(calcDisplay.innerText)
         solution = calculator.operate()
         calcDisplay.innerText = solution;
     }
     calculator.currentOperand = '';
-    calculator.previousOperand = '';
+    // calculator.previousOperand = '';
+    calculator.previousOperand = solution;
 })
 
 
