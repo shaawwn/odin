@@ -1,0 +1,29 @@
+/* main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+} */
+
+#library-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#library-header {
+    text-align: center;
+}
+
+#new-book {
+    background-color: green;
+    padding: 10px;
+    position: relative;
+    height: 45px;
+}
+
+.new-book {
+    /* position: absolute; */
+    /* right: 45%; */
+    margin: auto;
+    height: 50px;
+    width: 75px;
+}
