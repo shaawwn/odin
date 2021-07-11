@@ -19,9 +19,17 @@ html {
     font-family:Arial, Helvetica, sans-serif;
 }
 
-#new-book {
+.header-buttons {
     /* background-color: green; */
     padding: 10px;
+    margin: 10px;
+}
+
+#buttons-container {
+    display: flex;
+    /* flex-direction: row; */
+    justify-content: center;
+    padding:10px;
 }
 
 .new-book {
@@ -37,6 +45,7 @@ html {
     border: 0px;
     background-color:rgb(177, 177, 177)
 }
+
 .btn {
     border-radius: 5px;
     color: white;

@@ -2,6 +2,7 @@ console.log("Scripts loading....")
 
 let library = [];
 let libraryContent = document.getElementById('library-content')
+let libraryStorage = window.localStorage
 
 // NEW BOOK AND MODAL
 let newBook = document.getElementsByClassName('new-book')[0]
@@ -28,21 +29,10 @@ function Book(title, author, pages, read) {
     this.bookRead = read
 }
 
-let hobbit = new Book('The Hobbit', 'JRR Tolkien', '295', 'read')
-library.push(hobbit)
-
-function addBookToLibrary() {
-    //pass
-}
-
 function displayLibrary() {
     // Loop through the library and add the books
-
-    // let libraryContent = document.getElementById('library-content')
-    // console.log("Before loop", libraryContent)
     libraryContent.innerHTML = '';
     for (let i = 0; i < library.length; i++) {
-        // console.log("In loop", libraryContent, i)
         let bookDiv = document.createElement('div')
         bookDiv.classList.add('book-card')
 
@@ -64,36 +54,63 @@ function displayLibrary() {
         libraryContent.appendChild(bookDiv)
 
     }
-    // console.log("Out of loop", libraryContent)
+}
+
+function displayLibraryStorage() {
+    // Loop through the library and add the books
+    libraryContent.innerHTML = '';
+    // console.log("IN LS FUNC", libraryStorage)
+    for (let i = 0; i < libraryStorage.length; i++) {
+        // console.log(JSON.parse(libraryStorage.getItem(libraryStorage.key(i))))
+        let book = JSON.parse(libraryStorage.getItem(libraryStorage.key(i)))
+        
+        console.log(book.bookTitle)
+        console.log("Author: ", book.bookAuthor)
+        console.log("Pages: ", book.bookPages)
+        console.log("Read: ", book.bookRead)
+        let bookDiv = document.createElement('div')
+        bookDiv.classList.add('book-card')
+
+        let bookTitle = document.createElement('h2');
+        let bookAuthor = document.createElement('h4')
+        let bookPages = document.createElement('h4')
+        let bookRead = document.createElement('h4')
+
+        bookTitle.innerText = book.bookTitle;
+        bookAuthor.innerText = book.bookAuthor;
+        bookPages.innerText = book.bookPages;
+        bookRead.innerText = book.bookRead;
+
+        bookDiv.append(bookTitle);
+        bookDiv.append(bookAuthor);
+        bookDiv.append(bookPages);
+        bookDiv.append(bookRead);
+
+        libraryContent.appendChild(bookDiv)
+
+    }
 }
 
 
 submitButton.addEventListener('click', () => {
     
-    // let form = document.querySelector('#book-submit')
-    // let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
-    // library.push(newerBook)
-    // console.log("Library: ", library)
-    // displayLibrary()
-    // return false
-    addLib()
-    console.log("End of event")
+    addToLibrary()
     clearForm()
 }) 
 
-function addLib() {
+function addToLibrary() {
     let form = document.querySelector('#book-submit')
     let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
+    libraryStorage.setItem(`${form.title.value}`, JSON.stringify(newerBook))
 
     library.push(newerBook)
-    console.log("New book", newerBook)
-    displayLibrary()
+    displayLibraryStorage()
+    // displayLibrary()
 
     return false
 }
 
 function clearForm() {
-    console.log('Clearing form')
     let form = document.querySelector('#book-submit')
     let modal = document.querySelector('.modal')
     form.title.value = '';
@@ -104,10 +121,28 @@ function clearForm() {
     modal.style.display = 'none';
 }
 
-displayLibrary()
+function clearStorage() {
+    let clearStorageButton = document.getElementsByName('clear-button')[0]
+    clearStorageButton.addEventListener('click', () => {
+        if (confirm("Are you sure you want to clear the library?")) {
+            libraryStorage.clear()
+            libraryContent.innerHTML = '';
+        } else {
+            console.log("Library clear cancelled")
+        }
+    })
 
-// let newDiv = document.createElement('div')
-// let test = document.createElement('h1')
-// test.innerText = "Test"
-// newDiv.append(test)
-// libraryContent.append(newDiv)
+}
+// Storage
+
+// Setting a book with the relevant information example
+// setItem() takes two arguments, second use
+// libraryStorage.setItem('book', JSON.stringify({'title': 'The Hobbit', 'author': 'JRR Tolkein'}))
+// console.log(JSON.parse(libraryStorage.getItem('book')).title)
+
+// Clear storage with clear()
+// libraryStorage.clear()
+
+clearStorage()
+displayLibraryStorage()
+
