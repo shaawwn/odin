@@ -78,6 +78,7 @@ submitButton.addEventListener('click', () => {
     // return false
     addLib()
     console.log("End of event")
+    clearForm()
 }) 
 
 function addLib() {
@@ -85,13 +86,24 @@ function addLib() {
     let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
 
     library.push(newerBook)
+    console.log("New book", newerBook)
     displayLibrary()
+
     return false
 }
 
-function test() {
-    console.log("Submit test...")
+function clearForm() {
+    console.log('Clearing form')
+    let form = document.querySelector('#book-submit')
+    let modal = document.querySelector('.modal')
+    form.title.value = '';
+    form.author.value = '';
+    form.author.value = '';
+    form.pages.value = '';
+    form.read.value = true
+    modal.style.display = 'none';
 }
+
 displayLibrary()
 
 // let newDiv = document.createElement('div')
