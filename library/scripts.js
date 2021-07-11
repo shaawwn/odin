@@ -37,9 +37,12 @@ function addBookToLibrary() {
 
 function displayLibrary() {
     // Loop through the library and add the books
-    let libraryContent = document.querySelector('#library-content')
+
+    // let libraryContent = document.getElementById('library-content')
+    // console.log("Before loop", libraryContent)
+    libraryContent.innerHTML = '';
     for (let i = 0; i < library.length; i++) {
-        console.log("LIBRARY BOOK", library[i].bookTitle)
+        // console.log("In loop", libraryContent, i)
         let bookDiv = document.createElement('div')
         bookDiv.classList.add('book-card')
 
@@ -58,19 +61,41 @@ function displayLibrary() {
         bookDiv.append(bookPages);
         bookDiv.append(bookRead);
 
-        libraryContent.append(bookDiv)
+        libraryContent.appendChild(bookDiv)
+
     }
+    // console.log("Out of loop", libraryContent)
 }
 
 
 submitButton.addEventListener('click', () => {
     
+    // let form = document.querySelector('#book-submit')
+    // let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
+    // library.push(newerBook)
+    // console.log("Library: ", library)
+    // displayLibrary()
+    // return false
+    addLib()
+    console.log("End of event")
+}) 
+
+function addLib() {
     let form = document.querySelector('#book-submit')
     let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
 
     library.push(newerBook)
-    // displayLibrary()
+    displayLibrary()
+    return false
+}
 
-}) 
-
+function test() {
+    console.log("Submit test...")
+}
 displayLibrary()
+
+// let newDiv = document.createElement('div')
+// let test = document.createElement('h1')
+// test.innerText = "Test"
+// newDiv.append(test)
+// libraryContent.append(newDiv)
