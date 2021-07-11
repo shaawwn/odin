@@ -38,10 +38,13 @@ class Calculator {
     updateDisplay(number) {
         if (calcDisplay.innerText === '0') {
             calcDisplay.innerText = number
-        } else {
+        } else if(this.currentOperand !== '' && this.previousOperand !== '') {
+            calcDisplay.innerText = number;
+        }  else {
             calcDisplay.innerText += number
         }
 
+        // This adds the second number to the sub display
         if (operDisplay.innerText !== '') {
             operDisplay.innerText += number
         }
@@ -60,13 +63,21 @@ let currentOperand = '';
 let previousOperand = '';
 let calcDisplay = document.querySelector('#display')
 let operDisplay = document.querySelector('#smaller-display')
-// console.log(digits, operators, allclear, clear, equals)
+
 
 const calculator = new Calculator()
 
 // Add digit updates to display
 digits.forEach(digit => {digit.addEventListener('click', () => {
-    calculator.updateDisplay(digit.innerText)
+    if (calculator.currentOperand !== '' && calculator.previousOperand !== '') {
+        operDisplay.innerText = display.innerText
+        display.innerText = digit.innerText
+        // calculator.updateDisplay(digit.innerText)
+    } else {
+        console.log("UPDATING DISPLAY", calcDisplay, operDisplay)
+        calculator.updateDisplay(digit.innerText)
+    }
+    // calculator.updateDisplay(digit.innerText)
 })})
 
 // Add clear to clear button
@@ -85,10 +96,25 @@ operators.forEach(operator => {operator.addEventListener('click', () => {
         calculator.previousOperand = parseInt(calcDisplay.innerText)
         operDisplay.innerText = calculator.previousOperand + calculator.operator
         calcDisplay.innerText = '0'
-    } else if(calcDisplay !== '' && calculator.previousOperand !== '') {
+    } else if(calculator.currentOperand !== '' && calculator.previousOperand !== '') {
+        console.log("Both operands")
+        // calcDisplay.innerText = '0'
+        solution = calculator.operate()
+
+        // Update soltuion and reset operands
+        operDisplay.innerText += calculator.operator + calcDisplay.innerText
+        calcDisplay.innerText = solution
+        calculator.currentOperand = '';
+        calculator.previousOperand = '';
+
+    } 
+    
+    else if(calcDisplay !== '' && calculator.previousOperand !== '') {
         calculator.currentOperand = parseInt(calcDisplay.innerText)
         solution = calculator.operate()
         calcDisplay.innerText = solution
+        // If another number is entered, it needs to start a new digit sequence
+        calculator.previousOperand = solution
     }
 
 })})
