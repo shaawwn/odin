@@ -20,14 +20,17 @@ class Calculator {
     }
 
     operate() {
-        console.log("IN OPERATOR", this.operator, this.previousOperand, this.currentOperand)
         if (this.operator === '+') {
-            return this.currentOperand + this.previousOperand
+            return parseInt(this.currentOperand) + parseInt(this.previousOperand)
         }
         if (this.operator === '-') {
             return this.previousOperand - this.currentOperand
         }
         if (this.operator === '÷') {
+            if (this.currentOperand === 0) {
+                this.clear()
+                return 'Zero Division'
+            }
             return this.previousOperand / this.currentOperand
         }
         if (this.operator === 'x') {
@@ -36,7 +39,9 @@ class Calculator {
     }
 
     updateDisplay(number) {
-        if (calcDisplay.innerText === '0') {
+        if (calcDisplay.innerText === '0' || calcDisplay.innerText === 'Zero Division') {
+            calcDisplay.innerText = number
+        } else if (calculator.previousOperand !== '' && calculator.currentOperand != '') {
             calcDisplay.innerText = number
         } else if(this.currentOperand !== '' && this.previousOperand !== '') {
             calcDisplay.innerText = number;
@@ -46,14 +51,16 @@ class Calculator {
 
         // This adds the second number to the sub display
         if (operDisplay.innerText !== '') {
-            operDisplay.innerText += number
+            // Needs to clear out old numbers instead of just concatonating 
+            console.log("NOT UPDATING PROPERLY WHEN SEQUENCING")
+            operDisplay.innerText = calculator.previousOperand + calculator.operator + calcDisplay.innerText
         }
     }
 
 
 
 }
-
+// Testing token
 let digits = document.querySelectorAll('.digit')
 let operators = document.querySelectorAll('.operator')
 let allclear = document.getElementsByName('allclear')[0]
@@ -87,6 +94,23 @@ allclear.addEventListener('click', () => {
 
 // Add operator listeners
 operators.forEach(operator => {operator.addEventListener('click', () => {
+    // So the operator needs to operate BEFORE assigning a new operator
+    if (calculator.operator !== undefined) {
+        // After performing one operation, when user selects a new digit, begin new operation
+        // console.log("PROBLEM WITH UPDATING IN OPERATOR LOOP", calculator.previousOperand)
+        // Both operands are empty at this point
+        calculator.currentOperand = calcDisplay.innerText
+        solution = calculator.operate()
+
+        console.log("...", solution)
+        calcDisplay.innerText = solution
+        calculator.operator = operator.innerText
+        calculator.previousOperand = solution;
+        return
+    } else {
+        // DELETE IF/ELSE AND JUST THIS LINE 
+        calculator.operator = operator.innerText
+    }
     calculator.operator = operator.innerText
 
     if (calcDisplay.innerText === '0') {
@@ -122,14 +146,15 @@ operators.forEach(operator => {operator.addEventListener('click', () => {
 // Add equals operation
 equals.addEventListener('click', () => {
     if (calculator.currentOperand === '' && calculator.previousOperand === '') {
-        console.log("Not adding")
+        console.log("No operation when pressing equals")
     } else {
         calculator.currentOperand = parseInt(calcDisplay.innerText)
         solution = calculator.operate()
         calcDisplay.innerText = solution;
     }
     calculator.currentOperand = '';
-    calculator.previousOperand = '';
+    // calculator.previousOperand = '';
+    calculator.previousOperand = solution;
 })
 
 
