@@ -4,18 +4,42 @@ let library = [];
 let libraryContent = document.getElementById('library-content')
 let libraryStorage = window.localStorage
 
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    let removeButton = document.querySelectorAll('.remove-book')
-    removeButton.forEach(button => button.addEventListener('click', () => {
-        let keyName = button.parentElement.children[0].innerText
+    // let removeButton = document.querySelectorAll('.remove-button')
+    // removeButton.forEach(button => button.addEventListener('click', () => {
+    //     let keyName = button.parentElement.children[0].innerText
 
-        //Remove object from local storage
-        localStorage.removeItem(keyName)
+    //     //Remove object from local storage
+    //     localStorage.removeItem(keyName)
 
-        // Remove the HTML
-        removeItem(button.parentElement)
-    }))
+    //     // Remove the HTML
+    //     removeItem(button.parentElement)
+    // }))
+
+    // let readButton = document.querySelectorAll('.read-book')
+    // readButton.forEach(button => button.addEventListener('click', () => {
+    //     console.log("Read book!")
+    //     // Need to actually toggle the object data not just HTML
+    //     let bookObjectKey = button.parentElement.children[0].innerText;
+    //     let bookObject = JSON.parse(localStorage.getItem(bookObjectKey))
+    //     // console.log(bookObject)
+
+    //     if (button.innerText === 'Read') {
+    //         bookObject.bookRead = "Not Read"
+    //         button.innerText = 'Not Read'
+    //         console.log("Book is read", bookObject)
+
+    //         localStorage.setItem(bookObjectKey, JSON.stringify(bookObject))
+    //     } else if (button.innerText === 'Not Read') {
+    //         bookObject.bookRead = 'Read'
+    //         button.innerText = 'Read'
+    //         console.log("Book is not read", bookObject)
+
+    //         localStorage.setItem(bookObjectKey, JSON.stringify(bookObject))
+    //     }
+    // }))
 })
 
 // NEW BOOK AND MODAL
@@ -87,21 +111,51 @@ function displayLibraryStorage() {
         let bookTitle = document.createElement('h2');
         let bookAuthor = document.createElement('h4')
         let bookPages = document.createElement('h4')
-        let bookRead = document.createElement('h4')
+        let bookRead = document.createElement('button')
         let removeButton = document.createElement('button')
-        removeButton.classList.add('remove-book')
+        // let removeButton2 = document.createElement('button')
+
+        // removeButton.classList.add('remove-book')
+        // removeButton.classList.add('btn')
+
+        removeButton.classList.add('remove-button')
         removeButton.classList.add('btn')
+
+
+        bookRead.classList.add('btn')
+        bookRead.classList.add('read-book')
 
         bookTitle.innerText = book.bookTitle;
         bookAuthor.innerText = book.bookAuthor;
         bookPages.innerText = book.bookPages;
         bookRead.innerText = book.bookRead;
-        removeButton.innerText = 'Remove Book'
+
+        // Add event listeners
+        removeButton.addEventListener('click', () => {
+            let keyName = book.bookTitle
+            localStorage.removeItem(keyName)
+            removeItem(removeButton.parentElement)
+        })
+
+        bookRead.addEventListener('click', () => {
+            if (bookRead.innerText === 'Read') {
+                bookRead.innerText = 'Not Read'
+                book.bookRead = "Not Read"
+                localStorage.setItem(book.bookTitle, JSON.stringify(book))
+            } else if (bookRead.innerText === 'Not Read') {
+                bookRead.innerText = 'Read'
+                book.bookRead = 'Read'
+                localStorage.setItem(book.bookTitle, JSON.stringify(book))
+            }
+        })
+
+        removeButton.innerText = 'X'
 
         bookDiv.append(bookTitle);
         bookDiv.append(bookAuthor);
         bookDiv.append(bookPages);
         bookDiv.append(bookRead);
+        // bookDiv.append(removeButton)
         bookDiv.append(removeButton)
 
         libraryContent.appendChild(bookDiv)
@@ -129,6 +183,11 @@ function addToLibrary() {
     return false
 }
 
+
+function markRead() {
+    // Mark a book as read or not after you've already loaded into library
+
+}
 function clearForm() {
     let form = document.querySelector('#book-submit')
     let modal = document.querySelector('.modal')
@@ -136,7 +195,7 @@ function clearForm() {
     form.author.value = '';
     form.author.value = '';
     form.pages.value = '';
-    form.read.value = true
+    form.read.value = 'Read'
     modal.style.display = 'none';
 }
 

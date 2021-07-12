@@ -51,7 +51,24 @@ html {
     margin: auto;
     height: 30px;
     font-size: 12px;
+    /* background-color: rgb(36, 102, 160); */
+    background-color: rgb(230, 67, 67);
+}
+
+.remove-button {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    height: 25px;
+    background-color: red;
+    text-align: center;
+}
+
+.read-book {
     background-color: rgb(36, 102, 160);
+    margin: 10px;
+    height: 30px;
 }
 
 .btn {
@@ -75,6 +92,7 @@ html {
     border-radius: 8px;
     text-align: center;
     padding: 10px;
+    position: relative;
 }
 
 /* Modal */
