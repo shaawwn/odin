@@ -4,6 +4,20 @@ let library = [];
 let libraryContent = document.getElementById('library-content')
 let libraryStorage = window.localStorage
 
+document.addEventListener('DOMContentLoaded', () => {
+
+    let removeButton = document.querySelectorAll('.remove-book')
+    removeButton.forEach(button => button.addEventListener('click', () => {
+        let keyName = button.parentElement.children[0].innerText
+
+        //Remove object from local storage
+        localStorage.removeItem(keyName)
+
+        // Remove the HTML
+        removeItem(button.parentElement)
+    }))
+})
+
 // NEW BOOK AND MODAL
 let newBook = document.getElementsByClassName('new-book')[0]
 let submitButton = document.getElementById('submit-button')
@@ -17,7 +31,6 @@ newBook.addEventListener('click', () => {
     })
     
 })
-
 
 // Book and Library Constructors
 
@@ -64,10 +77,10 @@ function displayLibraryStorage() {
         // console.log(JSON.parse(libraryStorage.getItem(libraryStorage.key(i))))
         let book = JSON.parse(libraryStorage.getItem(libraryStorage.key(i)))
         
-        console.log(book.bookTitle)
-        console.log("Author: ", book.bookAuthor)
-        console.log("Pages: ", book.bookPages)
-        console.log("Read: ", book.bookRead)
+        // console.log(book.bookTitle)
+        // console.log("Author: ", book.bookAuthor)
+        // console.log("Pages: ", book.bookPages)
+        // console.log("Read: ", book.bookRead)
         let bookDiv = document.createElement('div')
         bookDiv.classList.add('book-card')
 
@@ -75,16 +88,21 @@ function displayLibraryStorage() {
         let bookAuthor = document.createElement('h4')
         let bookPages = document.createElement('h4')
         let bookRead = document.createElement('h4')
+        let removeButton = document.createElement('button')
+        removeButton.classList.add('remove-book')
+        removeButton.classList.add('btn')
 
         bookTitle.innerText = book.bookTitle;
         bookAuthor.innerText = book.bookAuthor;
         bookPages.innerText = book.bookPages;
         bookRead.innerText = book.bookRead;
+        removeButton.innerText = 'Remove Book'
 
         bookDiv.append(bookTitle);
         bookDiv.append(bookAuthor);
         bookDiv.append(bookPages);
         bookDiv.append(bookRead);
+        bookDiv.append(removeButton)
 
         libraryContent.appendChild(bookDiv)
 
@@ -97,6 +115,7 @@ submitButton.addEventListener('click', () => {
     addToLibrary()
     clearForm()
 }) 
+
 
 function addToLibrary() {
     let form = document.querySelector('#book-submit')
@@ -131,8 +150,15 @@ function clearStorage() {
             console.log("Library clear cancelled")
         }
     })
+}
+
+function removeItem(element) {
+    console.log("Removing item", element)
+    element.remove()
+    // localStorage.removeItem(e)
 
 }
+
 // Storage
 
 // Setting a book with the relevant information example
