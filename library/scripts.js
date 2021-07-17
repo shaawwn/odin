@@ -66,39 +66,13 @@ function Book(title, author, pages, read) {
     this.bookRead = read
 }
 
-function displayLibrary() {
-    // Loop through the library and add the books
-    libraryContent.innerHTML = '';
-    for (let i = 0; i < library.length; i++) {
-        let bookDiv = document.createElement('div')
-        bookDiv.classList.add('book-card')
-
-        let bookTitle = document.createElement('h2');
-        let bookAuthor = document.createElement('h4')
-        let bookPages = document.createElement('h4')
-        let bookRead = document.createElement('h4')
-
-        bookTitle.innerText = library[i].bookTitle;
-        bookAuthor.innerText = library[i].bookAuthor;
-        bookPages.innerText = library[i].bookPages;
-        bookRead.innerText = library[i].bookRead;
-
-        bookDiv.append(bookTitle);
-        bookDiv.append(bookAuthor);
-        bookDiv.append(bookPages);
-        bookDiv.append(bookRead);
-
-        libraryContent.appendChild(bookDiv)
-
-    }
-}
 
 function displayLibraryStorage() {
     // Loop through the library and add the books
     libraryContent.innerHTML = '';
-    // console.log("IN LS FUNC", libraryStorage)
+
     for (let i = 0; i < libraryStorage.length; i++) {
-        // console.log(JSON.parse(libraryStorage.getItem(libraryStorage.key(i))))
+
         let book = JSON.parse(libraryStorage.getItem(libraryStorage.key(i)))
         
         // console.log(book.bookTitle)
@@ -113,21 +87,20 @@ function displayLibraryStorage() {
         let bookPages = document.createElement('h4')
         let bookRead = document.createElement('button')
         let removeButton = document.createElement('button')
-        // let removeButton2 = document.createElement('button')
-
-        // removeButton.classList.add('remove-book')
-        // removeButton.classList.add('btn')
-
+ 
         removeButton.classList.add('remove-button')
         removeButton.classList.add('btn')
 
-
+        bookTitle.classList.add('book-detail')
+        bookAuthor.classList.add('book-detail')
+        bookPages.classList.add('book-detail')
         bookRead.classList.add('btn')
         bookRead.classList.add('read-book')
+        bookRead.classList.add('book-detail')
 
         bookTitle.innerText = book.bookTitle;
         bookAuthor.innerText = book.bookAuthor;
-        bookPages.innerText = book.bookPages;
+        bookPages.innerText = book.bookPages + ' pages';
         bookRead.innerText = book.bookRead;
 
         // Add event listeners
