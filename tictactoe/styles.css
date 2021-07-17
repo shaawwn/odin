@@ -1,0 +1,80 @@
+/* Main styles */
+
+/* Game board styles */
+html {
+    font-family: sans-serif;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: 160px 160px 160px;
+    grid-template-rows: 160px 160px 160px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px; 
+    width: 500px;
+    height: 500px;
+    margin: auto;
+    background-color: grey;
+}
+
+header {
+    font-size: 40px;
+    text-align: center;
+    /* font-family: sans-serif; */
+}
+
+.scoreboard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 0px;
+}
+
+.player-name {
+    font-size: 40px;
+    margin:0px;
+}
+.player-score {
+    font-size: 44px;
+    margin-top: 5px;
+}
+
+.score-card {
+    text-align: center;
+}
+.column {
+    background-color: white;
+    /* border-radius: 100px; */
+}
+
+/* .column:hover {
+    background-color: green;
+    border-radius: 100px;
+} */
+
+.clicked {
+    background-color: grey;
+
+}
+
+.circle {
+    color: black;
+    font-size: 150px;
+    text-align: center;
+    /* font-family: sans-serif; */
+
+}
+
+.cross {
+    /* margin: 100px;
+    color: green;
+    font-size: 56px;
+    padding: 25px; */
+
+    /* Working style */
+    color: black;
+    font-size: 150px;
+    text-align: center;
+    font-family: sans-serif;
+}
+/* Display: grid */

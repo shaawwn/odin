@@ -4,44 +4,6 @@ let library = [];
 let libraryContent = document.getElementById('library-content')
 let libraryStorage = window.localStorage
 
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    // let removeButton = document.querySelectorAll('.remove-button')
-    // removeButton.forEach(button => button.addEventListener('click', () => {
-    //     let keyName = button.parentElement.children[0].innerText
-
-    //     //Remove object from local storage
-    //     localStorage.removeItem(keyName)
-
-    //     // Remove the HTML
-    //     removeItem(button.parentElement)
-    // }))
-
-    // let readButton = document.querySelectorAll('.read-book')
-    // readButton.forEach(button => button.addEventListener('click', () => {
-    //     console.log("Read book!")
-    //     // Need to actually toggle the object data not just HTML
-    //     let bookObjectKey = button.parentElement.children[0].innerText;
-    //     let bookObject = JSON.parse(localStorage.getItem(bookObjectKey))
-    //     // console.log(bookObject)
-
-    //     if (button.innerText === 'Read') {
-    //         bookObject.bookRead = "Not Read"
-    //         button.innerText = 'Not Read'
-    //         console.log("Book is read", bookObject)
-
-    //         localStorage.setItem(bookObjectKey, JSON.stringify(bookObject))
-    //     } else if (button.innerText === 'Not Read') {
-    //         bookObject.bookRead = 'Read'
-    //         button.innerText = 'Read'
-    //         console.log("Book is not read", bookObject)
-
-    //         localStorage.setItem(bookObjectKey, JSON.stringify(bookObject))
-    //     }
-    // }))
-})
-
 // NEW BOOK AND MODAL
 let newBook = document.getElementsByClassName('new-book')[0]
 let submitButton = document.getElementById('submit-button')
@@ -66,19 +28,12 @@ function Book(title, author, pages, read) {
     this.bookRead = read
 }
 
-
 function displayLibraryStorage() {
     // Loop through the library and add the books
     libraryContent.innerHTML = '';
-
     for (let i = 0; i < libraryStorage.length; i++) {
-
         let book = JSON.parse(libraryStorage.getItem(libraryStorage.key(i)))
         
-        // console.log(book.bookTitle)
-        // console.log("Author: ", book.bookAuthor)
-        // console.log("Pages: ", book.bookPages)
-        // console.log("Read: ", book.bookRead)
         let bookDiv = document.createElement('div')
         bookDiv.classList.add('book-card')
 
@@ -87,7 +42,8 @@ function displayLibraryStorage() {
         let bookPages = document.createElement('h4')
         let bookRead = document.createElement('button')
         let removeButton = document.createElement('button')
- 
+
+
         removeButton.classList.add('remove-button')
         removeButton.classList.add('btn')
 
@@ -151,7 +107,6 @@ function addToLibrary() {
 
     library.push(newerBook)
     displayLibraryStorage()
-    // displayLibrary()
 
     return false
 }
@@ -187,19 +142,8 @@ function clearStorage() {
 function removeItem(element) {
     console.log("Removing item", element)
     element.remove()
-    // localStorage.removeItem(e)
 
 }
-
-// Storage
-
-// Setting a book with the relevant information example
-// setItem() takes two arguments, second use
-// libraryStorage.setItem('book', JSON.stringify({'title': 'The Hobbit', 'author': 'JRR Tolkein'}))
-// console.log(JSON.parse(libraryStorage.getItem('book')).title)
-
-// Clear storage with clear()
-// libraryStorage.clear()
 
 clearStorage()
 displayLibraryStorage()
