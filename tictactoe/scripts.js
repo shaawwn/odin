@@ -1,68 +1,121 @@
 console.log("Scripts loading....")
 
-// let squares = document.querySelectorAll('.column')
+const player = (symbol) => {
+    let score = 0;
 
-// squares.forEach(square => {square.addEventListener('click', () => {
-//     console.log("Clicking!")
-//     // square.classList.add('clicked')
+    const getPlayer = () => {
+        console.log(symbol)
+        return symbol
+    }
 
-//     let circle = document.createElement('div')
-//     circle.classList.add('circle')
-//     circle.innerText = 'O'
+    const updateScore = () => {
+        score++
+    }
 
-//     // let cross = document.createElement('div')
-//     // cross.classList.add('cross')
-//     // cross.innerText = 'X'
+    const getScore = () => {
+        return score
+    }
 
-//     // square.append(cross)
-//     square.append(circle)
-// })})
+    return { getPlayer, updateScore, getScore }
+}
 
+let x = player('X')
+x.getPlayer()
+// x.getScore()
+x.updateScore()
+// x.getScore()
+x.updateScore()
+x.updateScore()
 
+function checkWinner(player) {
+    console.log("Checking winner")
+    player.getScore()
+    if (player.getScore() === 3) {
+        console.log(`${player.getPlayer()} wins the round`)
+    }
+}
+
+checkWinner(x)
 const gameBoard = (() => {
     let squares = document.querySelectorAll('.column')
 
+    let moves = 9;
+    let board = document.querySelector('.game-board')
+    const buildBoard = () => {
+        // Add 9 squares to the game board
+        for (let i = 0; i < 10; i++) {
+            let div = document.createElement('div')
+            div.classList.add('column')
+            board.append(div)
+        }
+    }
     const printBoard = () => squares.forEach(square => {
         console.log(square.innerText)
     })
     const boardLength = () => console.log(squares.length)
+    const clearBoard = () => {
+        for (let i = 0; i < squares.length; i++) {
+            squares.forEach(square => {square.innerText = ''})
+        }
+        moves = 9;
+    }
+    const checkMoves = () => {
+        moves--;
+        console.log(moves)
+    }
     const checkGameOver = (player) => {
-        console.log("Checking game condition")
+
+        console.log("Checking game condition", squares)
         // Victory conditions are: [1, 2, 3], [4, 5, 6], [7, 8, 9]
         // [1, 5, 9], [2, 5, 8], [3, 6, 9]
         // [7, 5, 3]
         if (squares[0].innerText === player && squares[1].innerText === player && squares[2].innerText === player) {
-            console.log(`${player} wins!`)
+            // console.log(`${player} wins!`)
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if (squares[3].innerText === player && squares[4].innerText === player && squares[5].innerText === player) {
-            console.log("Victory!")
+            // console.log("Victory!")
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if(squares[6].innerText === player && squares[7].innerText === player && squares[8].innerText === player) {
-            console.log("At last, victory!")
+            // console.log("At last, victory!")
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if(squares[0].innerText === player && squares[4].innerText === player && squares[8].innerText === player) {
-            console.log("Left to right down cross victory")
+            // console.log("Left to right down cross victory")
+            alert(`${player} wins! diagonally`)
+            clearBoard() 
         } else if(squares[6].innerText === player && squares[4].innerText === player && squares[2].innerText === player) {
-            console.log("Lef to right up victory!")
+            // console.log("Lef to right up victory!")
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if(squares[0].innerText === player && squares[3].innerText === player && squares[6].innerText === player) {
-            console.log("Column 1 victory!")
+            // console.log("Column 1 victory!")
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if(squares[1].innerText === player && squares[4].innerText === player && squares[7].innerText === player) {
-            console.log("Column 2 victory!")
+            // console.log("Column 2 victory!")
+            alert(`${player} wins!`)
+            clearBoard() 
         } else if(squares[2].innerText === player && squares[5].innerText === player && squares[8].innerText === player) {
-            console.log("Column 3")
+            // console.log("Column 3")
+            alert(`${player} wins!`)
+            clearBoard() 
+        } else if(moves === 0){
+            alert("Stalemate!")
         } else {
-            console.log('Stalemate!')
+            console.log("Continuing game")
         }
     }
 
-    return { printBoard, boardLength, checkGameOver }
+    return { printBoard, boardLength, checkGameOver, buildBoard, checkMoves }
 })();
 
-gameBoard.printBoard()
-gameBoard.boardLength()
-gameBoard.checkGameOver('X')
 
 // Main game function
 function playGame() {
     console.log("Playing game....")
-    board = gameBoard()
+    // gameBoard.buildBoard()
 
     // Switch back and forth between players
     let player = choosePlayer()
@@ -73,8 +126,6 @@ function playGame() {
 
     // Uncomment to start game
     makeMove(player)
-
-
 }
 
 
@@ -114,16 +165,21 @@ function makeMove(player) {
             cross.classList.add('cross')
             cross.innerText = 'X'
             square.append(cross)
-            player = 'O'
-            console.log("Player in func", player)
-            // return player;
+            console.log("Adding", cross)
+            gameBoard.checkMoves()
+            gameBoard.checkGameOver(player)
+            // player = 'O'
+
         } else if(player === 'O') {
             let circle = document.createElement('div')
             circle.classList.add("circle")
             circle.innerText = 'O'
             square.append(circle)
-            player = 'X'
-            // return player
+            console.log("Adding", circle)
+            gameBoard.checkMoves()
+            gameBoard.checkGameOver(player)
+            // player = 'X'
+
         }
 
     })})
