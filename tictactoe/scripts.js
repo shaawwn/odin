@@ -1,12 +1,16 @@
 console.log("Scripts loading....")
 
 // Player object, which holds player data and methods, including score
-const playerObject = (symbol) => {
+const playerObject = (name, symbol) => {
     let score = 0;
-    let scoreBoard = document.getElementsByClassName(`${symbol}`)[0]
+    let scoreBoard = document.getElementsByClassName(`${symbol.toLowerCase()}`)[0]
 
     const getPlayer = () => {
         return symbol
+    }
+
+    const getPlayerName = () => {
+        return name
     }
 
     const updateScore = () => {
@@ -23,7 +27,7 @@ const playerObject = (symbol) => {
         score = 0;
         scoreBoard.innerText = score;
      }
-    return { getPlayer, updateScore, getScore, resetScore }
+    return { getPlayer, getPlayerName, updateScore, getScore, resetScore }
 }
 
 
@@ -49,6 +53,7 @@ const gameBoard = (() => {
         // Starting with 9 moves (total squares in board), decrement until there
         // are no more moves left, indicating the end of a game, then clear 
         // the board
+        console.log("Clearing board")
         for (let i = 0; i < squares.length; i++) {
             squares.forEach(square => { square.innerText = '' })
         }
@@ -61,49 +66,57 @@ const gameBoard = (() => {
         console.log(moves)
     }
 
+    const markMove = (square, playerSymbol) => {
+        // Player marks a square
+        let markSquare = document.createElement('div')
+        markSquare.classList.add(playerSymbol)
+        markSquare.innerText = playerSymbol
+        square.append(markSquare)
+    }
+
     const checkGameOver = (playerObj, player, computer) => {
         // Check for game over conditions, either a player victory, or stalemate
         let playerName = playerObj.getPlayer()
-
+        let name = playerObj.getPlayerName()
         // Victory conditions are: [1, 2, 3], [4, 5, 6], [7, 8, 9]
         // [1, 5, 9], [2, 5, 8], [3, 6, 9]
         // [7, 5, 3]
         if (squares[0].innerText === playerName && squares[1].innerText === playerName && squares[2].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[3].innerText === playerName && squares[4].innerText === playerName && squares[5].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             clearBoard()
         } else if (squares[6].innerText === playerName && squares[7].innerText === playerName && squares[8].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[0].innerText === playerName && squares[4].innerText === playerName && squares[8].innerText === playerName) {
-            alert(`${playerName} wins! diagonally`)
+            alert(`${name} wins! diagonally`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[6].innerText === playerName && squares[4].innerText === playerName && squares[2].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[0].innerText === playerName && squares[3].innerText === playerName && squares[6].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[1].innerText === playerName && squares[4].innerText === playerName && squares[7].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
         } else if (squares[2].innerText === playerName && squares[5].innerText === playerName && squares[8].innerText === playerName) {
-            alert(`${playerName} wins!`)
+            alert(`${name} wins!`)
             playerObj.updateScore()
             endMatch(playerObj, player, computer)
             clearBoard()
@@ -114,40 +127,62 @@ const gameBoard = (() => {
         }
     }
 
-    return { printBoard, checkGameOver, buildBoard, checkMoves }
+    return { printBoard, checkGameOver, buildBoard, checkMoves, markMove, clearBoard }
 })();
 
 
 // Main game function
 function playGame() {
     console.log("Playing game....")
-
+    let player;
+    let computer;
     // Switch back and forth between players
-    let players = choosePlayer()
-    let player = players[0]
-    let computer = players[1]
 
-    makeMove(player, computer)
+    // Prompt for player names AFTER start button has been hit
+    let startBtn = document.querySelector('.start-reset')
+    let startModal = document.querySelector('.start-modal')
+    let resetBtn = document.querySelector('.reset-game')
+
+    startBtn.addEventListener('click', () => {
+        let players = choosePlayer()
+        player = players[0]
+        computer = players[1]
+
+        startModal.style.display = 'none'
+        resetBtn.style.display = 'block'
+        // Reset the Game 
+        startBtn.innerText = 'Reset Game'
+        makeMove(player, computer)
+    })
+
+    resetBtn.addEventListener('click', () => {
+        resetMatch(player, computer)
+
+    })
+    // let players = choosePlayer()
+    // let player = players[0]
+    // let computer = players[1]
+
+    // makeMove(player, computer)
 }
 
 
 function choosePlayer() {
-    let player;
-    let counter = 0;
+    
+    
+    playerXName = prompt("Who will be player X?")
+    playerOName = prompt("Who will be player O?")
+    
+    let playerX = playerObject(playerXName, 'X');
+    let playerO = playerObject(playerOName, 'O');
 
-    while (player !== "X" || player !== "O") {
-        player = prompt("Who will go first, X or O?")
-        player = playerObject(player)
-        let computer;
+    let playerxDiv = document.querySelector('.playerx')
+    let playeroDiv = document.querySelector('.playero')
 
-        if (player.getPlayer() === 'X') {
-            computer = playerObject('O')
-        } else if (player.getPlayer() === 'O') {
-            computer = playerObject('X');
-        }
+    playerxDiv.innerText = playerX.getPlayerName();
+    playeroDiv.innerText = playerO.getPlayerName();
 
-        return [player, computer]
-    }
+    return [playerX, playerO]
 }
 
 function makeMove(player, computer) {
@@ -163,21 +198,23 @@ function makeMove(player, computer) {
                 return false
             }
             if (currentPlayer.getPlayer() === 'X') {
-                let cross = document.createElement('div')
-                cross.classList.add('cross')
-                cross.innerText = 'X'
-                square.append(cross)
-                console.log("Adding", cross)
+                gameBoard.markMove(square, 'X')
+                // let cross = document.createElement('div')
+                // cross.classList.add('cross')
+                // cross.innerText = 'X'
+                // square.append(cross)
+
                 gameBoard.checkMoves()
                 gameBoard.checkGameOver(currentPlayer, player, computer)
                 currentPlayer = computer
 
             } else if (currentPlayer.getPlayer() === 'O') {
-                let circle = document.createElement('div')
-                circle.classList.add("circle")
-                circle.innerText = 'O'
-                square.append(circle)
-                console.log("Adding", circle)
+                gameBoard.markMove(square, 'O')
+                // let circle = document.createElement('div')
+                // circle.classList.add("circle")
+                // circle.innerText = 'O'
+                // square.append(circle)
+
                 gameBoard.checkMoves()
                 gameBoard.checkGameOver(currentPlayer)
 
@@ -192,10 +229,27 @@ function makeMove(player, computer) {
 function endMatch(current, player, computer) {
     // Declare a winner and reset the game after a player reaches 3 wins
     if (current.getScore() === 3) {
-        alert(`${current.getPlayer()} wins the match!`)
+        alert(`${current.getPlayerName()} wins the match!`)
         player.resetScore()
         computer.resetScore()
     }
+}
+
+function resetMatch(player, computer) {
+    // Reset the match when the reset button is hit
+    let reset = prompt("Are you sure you want to reset match?")
+    console.log("RESET", reset)
+    if (reset === null) {
+        //pass
+        console.log("Not resetting")
+    } else {
+        player.resetScore()
+        computer.resetScore()
+        gameBoard.clearBoard()
+    }
+    // player.resetScore()
+    // computer.resetScore()
+    // gameBoard.clearBoard()
 }
 
 function changePlayer(player) {
@@ -216,3 +270,12 @@ function clearListener() {
 
 playGame()
 
+
+// Specifications not yet met
+
+// 1. Start/Reset Button
+
+// 2. Change game winning from alert to some other HTML display element
+    // Modal congratulating winner?
+
+// 3. Optional add AI using minimax
