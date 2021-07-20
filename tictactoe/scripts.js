@@ -1,15 +1,23 @@
 console.log("Scripts loading....")
 
-const player = (symbol) => {
+const playerObject = (symbol) => {
     let score = 0;
+    let scoreBoard = document.getElementsByClassName(`${symbol}`)[0]
 
     const getPlayer = () => {
-        console.log(symbol)
+        // console.log(symbol)
         return symbol
     }
 
     const updateScore = () => {
+        console.log("Scoreboard", scoreBoard.innerText)
         score++
+        scoreBoard.innerText = '';
+        scoreBoard.innerText = score;
+
+        if (score === 3) {
+            alert(`${symbol} wins the match!`)
+        }
     }
 
     const getScore = () => {
@@ -19,13 +27,7 @@ const player = (symbol) => {
     return { getPlayer, updateScore, getScore }
 }
 
-let x = player('X')
-x.getPlayer()
-// x.getScore()
-x.updateScore()
-// x.getScore()
-x.updateScore()
-x.updateScore()
+
 
 function checkWinner(player) {
     console.log("Checking winner")
@@ -35,7 +37,6 @@ function checkWinner(player) {
     }
 }
 
-checkWinner(x)
 const gameBoard = (() => {
     let squares = document.querySelectorAll('.column')
 
@@ -55,7 +56,7 @@ const gameBoard = (() => {
     const boardLength = () => console.log(squares.length)
     const clearBoard = () => {
         for (let i = 0; i < squares.length; i++) {
-            squares.forEach(square => {square.innerText = ''})
+            squares.forEach(square => { square.innerText = '' })
         }
         moves = 9;
     }
@@ -63,7 +64,9 @@ const gameBoard = (() => {
         moves--;
         console.log(moves)
     }
-    const checkGameOver = (player) => {
+    const checkGameOver = (playerObj) => {
+        
+        let player = playerObj.getPlayer()
 
         console.log("Checking game condition", squares)
         // Victory conditions are: [1, 2, 3], [4, 5, 6], [7, 8, 9]
@@ -72,36 +75,44 @@ const gameBoard = (() => {
         if (squares[0].innerText === player && squares[1].innerText === player && squares[2].innerText === player) {
             // console.log(`${player} wins!`)
             alert(`${player} wins!`)
-            clearBoard() 
+            playerObj.updateScore()
+            clearBoard()
         } else if (squares[3].innerText === player && squares[4].innerText === player && squares[5].innerText === player) {
             // console.log("Victory!")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(squares[6].innerText === player && squares[7].innerText === player && squares[8].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[6].innerText === player && squares[7].innerText === player && squares[8].innerText === player) {
             // console.log("At last, victory!")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(squares[0].innerText === player && squares[4].innerText === player && squares[8].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[0].innerText === player && squares[4].innerText === player && squares[8].innerText === player) {
             // console.log("Left to right down cross victory")
             alert(`${player} wins! diagonally`)
-            clearBoard() 
-        } else if(squares[6].innerText === player && squares[4].innerText === player && squares[2].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[6].innerText === player && squares[4].innerText === player && squares[2].innerText === player) {
             // console.log("Lef to right up victory!")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(squares[0].innerText === player && squares[3].innerText === player && squares[6].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[0].innerText === player && squares[3].innerText === player && squares[6].innerText === player) {
             // console.log("Column 1 victory!")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(squares[1].innerText === player && squares[4].innerText === player && squares[7].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[1].innerText === player && squares[4].innerText === player && squares[7].innerText === player) {
             // console.log("Column 2 victory!")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(squares[2].innerText === player && squares[5].innerText === player && squares[8].innerText === player) {
+            playerObj.updateScore()
+            clearBoard()
+        } else if (squares[2].innerText === player && squares[5].innerText === player && squares[8].innerText === player) {
             // console.log("Column 3")
             alert(`${player} wins!`)
-            clearBoard() 
-        } else if(moves === 0){
+            playerObj.updateScore()
+            clearBoard()
+        } else if (moves === 0) {
             alert("Stalemate!")
         } else {
             console.log("Continuing game")
@@ -118,14 +129,18 @@ function playGame() {
     // gameBoard.buildBoard()
 
     // Switch back and forth between players
-    let player = choosePlayer()
+    // let player = choosePlayer()
+    let players = choosePlayer()
+    let player = players[0]
+    let computer = players[1]
+
     let squares = document.querySelectorAll('column')
     let gameOver = false;
     let counter = 0
     // Main loop, when a player selects a space, it should add that to the game board
 
     // Uncomment to start game
-    makeMove(player)
+    makeMove(player, computer)
 }
 
 
@@ -135,69 +150,92 @@ function choosePlayer() {
 
     while (player !== "X" || player !== "O") {
         player = prompt("Who will go first, X or O?")
-        counter ++
+        player = playerObject(player)
+        let computer;
 
-        if (player === 'X' || player === 'O') {
+        if (player.getPlayer() === 'X') {
+            computer = playerObject('O')
+        } else if (player.getPlayer() === 'O') {
+            computer = playerObject('X');
+        }
+
+        return [player, computer]
+        console.log("Player: ", player.getPlayer())
+        console.log("Computer: ", computer.getPlayer())
+        counter++
+
+        if (player.getPlayer() === 'X' || player.getPlayer() === 'O') {
             return player
         }
         counter++
-        
+
         if (counter > 1) {
             return false
         }
     }
 }
 
-function makeMove(player) {
-
+function makeMove(player, computer) {
+    console.log("Player in makeMove function", computer.getPlayer())
+    let currentPlayer = player
     let squares = document.querySelectorAll('.column')
     let clicked = false;
-    console.log("Running make move....", player)
-    
-    squares.forEach(square => {square.addEventListener('click', () => {
-        // Need to conditional to make sure playes can select the same square twice
-        if (square.innerText !== '') {
-            console.log("Square already selected")
-            return false
-        }
-        if (player === 'X') {
-            let cross = document.createElement('div')
-            cross.classList.add('cross')
-            cross.innerText = 'X'
-            square.append(cross)
-            console.log("Adding", cross)
-            gameBoard.checkMoves()
-            gameBoard.checkGameOver(player)
-            // player = 'O'
 
-        } else if(player === 'O') {
-            let circle = document.createElement('div')
-            circle.classList.add("circle")
-            circle.innerText = 'O'
-            square.append(circle)
-            console.log("Adding", circle)
-            gameBoard.checkMoves()
-            gameBoard.checkGameOver(player)
-            // player = 'X'
+    squares.forEach(square => {
+        square.addEventListener('click', () => {
+            // Need to conditional to make sure playes can select the same square twice
+            if (square.innerText !== '') {
+                console.log("Square already selected")
+                return false
+            }
+            if (currentPlayer.getPlayer() === 'X') {
+                let cross = document.createElement('div')
+                cross.classList.add('cross')
+                cross.innerText = 'X'
+                square.append(cross)
+                console.log("Adding", cross)
+                gameBoard.checkMoves()
+                gameBoard.checkGameOver(player)
+                // Change to other player
+                // player = 'O'
+                // This creates a new object each time
+                currentPlayer = computer
 
-        }
+            } else if (currentPlayer.getPlayer() === 'O') {
+                let circle = document.createElement('div')
+                circle.classList.add("circle")
+                circle.innerText = 'O'
+                square.append(circle)
+                console.log("Adding", circle)
+                gameBoard.checkMoves()
+                gameBoard.checkGameOver(player)
+                // player = 'X'
+                currentPlayer = player
 
-    })})
+            }
+
+        })
+    })
 
     // Wait for a click event before continuing
 
 }
 
+function changePlayer(player) {
+    if (player.getPlayer() === 'X') {
+        player = playerObject('O')
+    } else if (player.getPlayer() === 'O') {
+        player = playerObject('X')
+    }
+    return player
+}
+
 function clearListener() {
-    
+
     let squares = document.querySelectorAll('column')
-    squares.forEach(square => {square.removeEventListener('click')})
+    squares.forEach(square => { square.removeEventListener('click') })
 
 }
 
-function checkGameOver() {
-    // Check if there is 3 in a row for any player, if so, return the winner
-    // if stalemate, return stalemate
 
-}
-// playGame()
+playGame()
