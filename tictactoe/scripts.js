@@ -159,11 +159,6 @@ function playGame() {
         resetMatch(player, computer)
 
     })
-    // let players = choosePlayer()
-    // let player = players[0]
-    // let computer = players[1]
-
-    // makeMove(player, computer)
 }
 
 
@@ -186,7 +181,7 @@ function choosePlayer() {
 }
 
 function makeMove(player, computer) {
-    console.log("Player in makeMove function", computer.getPlayer())
+
     let currentPlayer = player
     let squares = document.querySelectorAll('.column')
     let clicked = false;
@@ -194,27 +189,16 @@ function makeMove(player, computer) {
     squares.forEach(square => {
         square.addEventListener('click', () => {
             if (square.innerText !== '') {
-                console.log("Square already selected")
                 return false
             }
             if (currentPlayer.getPlayer() === 'X') {
                 gameBoard.markMove(square, 'X')
-                // let cross = document.createElement('div')
-                // cross.classList.add('cross')
-                // cross.innerText = 'X'
-                // square.append(cross)
-
                 gameBoard.checkMoves()
                 gameBoard.checkGameOver(currentPlayer, player, computer)
                 currentPlayer = computer
 
             } else if (currentPlayer.getPlayer() === 'O') {
                 gameBoard.markMove(square, 'O')
-                // let circle = document.createElement('div')
-                // circle.classList.add("circle")
-                // circle.innerText = 'O'
-                // square.append(circle)
-
                 gameBoard.checkMoves()
                 gameBoard.checkGameOver(currentPlayer)
 
@@ -240,16 +224,12 @@ function resetMatch(player, computer) {
     let reset = prompt("Are you sure you want to reset match?")
     console.log("RESET", reset)
     if (reset === null) {
-        //pass
         console.log("Not resetting")
     } else {
         player.resetScore()
         computer.resetScore()
         gameBoard.clearBoard()
     }
-    // player.resetScore()
-    // computer.resetScore()
-    // gameBoard.clearBoard()
 }
 
 function changePlayer(player) {
@@ -270,12 +250,3 @@ function clearListener() {
 
 playGame()
 
-
-// Specifications not yet met
-
-// 1. Start/Reset Button
-
-// 2. Change game winning from alert to some other HTML display element
-    // Modal congratulating winner?
-
-// 3. Optional add AI using minimax
