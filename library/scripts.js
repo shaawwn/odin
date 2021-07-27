@@ -1,32 +1,8 @@
 console.log("Scripts loading....")
 // On library-with-classes branch
-// let library = [];
+
 let libraryContent = document.getElementById('library-content')
-// let libraryStorage = window.localStorage
 
-// NEW BOOK BUTTON AND MODAL
-// let newBook = document.getElementsByClassName('new-book')[0]
-// let submitButton = document.getElementById('submit-button')
-
-// newBook.addEventListener('click', () => {
-//     let modal = document.querySelector('.modal')
-//     let closeButton = document.querySelector('.close-btn')
-//     modal.style.display = 'block'
-//     closeButton.addEventListener('click', () => {
-//         modal.style.display = 'none';
-//     })
-    
-// })
-
-// Book and Library Constructors
-
-// function Book(title, author, pages, read) {
-//     // Constructor
-//     this.bookTitle = title;
-//     this.bookAuthor = author;
-//     this.bookPages = pages;
-//     this.bookRead = read
-// }
 
 // Create a Book 'class'
 class Book {
@@ -50,10 +26,10 @@ class Book {
     }
 
     setRead() {
-        if (this.read === false) {
-            this.read = true
-        } else if(this.read === true) {
-            this.read = false
+        if (this.read === 'Not Read') {
+            this.read = 'Read'
+        } else if(this.read === 'Read') {
+            this.read = 'Not Read'
         }
     }
 
@@ -67,7 +43,7 @@ class Library {
     libraryStorage = window.localStorage;
 
     constructor() {
-        //pass
+        //Just intantiate the library and add books to it later
         // this.libraryArray = libraryArray
         // this.libraryStorage = libraryStorage
     }
@@ -111,6 +87,8 @@ class Library {
         console.log("STORAGE LENGTH", libraryStorage.length)
         for (let i = 0; i < libraryStorage.length; i++) {
             let book = JSON.parse(libraryStorage.getItem(libraryStorage.key(i)))
+            let bookObj = new Book(book.title, book.author, book.pages, book.read)
+
             let bookDiv = document.createElement('div')
             bookDiv.classList.add('book-card')
     
@@ -138,20 +116,22 @@ class Library {
     
             // Add event listeners
             removeButton.addEventListener('click', () => {
-                let keyName = book.bookTitle
+                let keyName = book.title
                 localStorage.removeItem(keyName)
                 removeItem(removeButton.parentElement)
             })
     
             bookRead.addEventListener('click', () => {
                 if (bookRead.innerText === 'Read') {
+                    console.log("Marking read", book)
                     bookRead.innerText = 'Not Read'
-                    book.bookRead = "Not Read"
-                    localStorage.setItem(book.bookTitle, JSON.stringify(book))
+                    bookObj.setRead()
+                    this.libraryStorage.setItem(book.title, JSON.stringify(bookObj))
                 } else if (bookRead.innerText === 'Not Read') {
                     bookRead.innerText = 'Read'
                     book.bookRead = 'Read'
-                    localStorage.setItem(book.bookTitle, JSON.stringify(book))
+                    bookObj.setRead()
+                    this.libraryStorage.setItem(book.title, JSON.stringify(bookObj))
                 }
             })
     
@@ -161,7 +141,6 @@ class Library {
             bookDiv.append(bookAuthor);
             bookDiv.append(bookPages);
             bookDiv.append(bookRead);
-            // bookDiv.append(removeButton)
             bookDiv.append(removeButton)
     
             libraryContent.appendChild(bookDiv)
@@ -226,6 +205,9 @@ function removeItem(element) {
 
 }
 
+// Clear storage adds a listener to the clear library button to 
+// clear both the Library, but all the HTML associated with the 
+// Library
 clearStorage()
 library.displayLibraryStorage(Storage)
 
