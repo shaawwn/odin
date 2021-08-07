@@ -4,6 +4,10 @@ import Beer from './beers.jpeg';
 import Pizza from './pizza.jpeg';
 import Nachos from './nachos.jpeg';
 import Hotwings from './hotwings.jpeg';
+import { loadMenu, addMedia } from './menu.js';
+import { addContactInfo } from './contact.js';
+
+const mainBody = document.querySelector('#content');
 
 function addDiv() {
     const jumbo = document.createElement('div')
@@ -34,36 +38,35 @@ function addDiv() {
     jumbo.appendChild(details)
     jumbo.append(background)
 
-    let mainBody = document.querySelector('#content')
     mainBody.appendChild(jumbo)
 }
 
-function addMedia() {
-    const mainBody = document.querySelector('#content')
-    const mediaDiv = document.createElement('div')
-    mediaDiv.setAttribute('id', 'media')
+// function addMedia() {
+//     const mainBody = document.querySelector('#content')
+//     const mediaDiv = document.createElement('div')
+//     mediaDiv.setAttribute('id', 'media')
 
-    const beerImage = new Image()
-    const hotWings = new Image()
-    const nachoImage = new Image()
-    const pizzaImage = new Image()
+//     const beerImage = new Image()
+//     const hotWings = new Image()
+//     const nachoImage = new Image()
+//     const pizzaImage = new Image()
 
-    beerImage.src = Beer
-    beerImage.classList.add('menu-image');
-    hotWings.src = Hotwings;
-    hotWings.classList.add('menu-image');
-    nachoImage.src = Nachos;
-    nachoImage.classList.add('menu-image');
-    pizzaImage.src = Pizza;
-    pizzaImage.classList.add('menu-image');
+//     beerImage.src = Beer
+//     beerImage.classList.add('menu-image');
+//     hotWings.src = Hotwings;
+//     hotWings.classList.add('menu-image');
+//     nachoImage.src = Nachos;
+//     nachoImage.classList.add('menu-image');
+//     pizzaImage.src = Pizza;
+//     pizzaImage.classList.add('menu-image');
 
-    mediaDiv.appendChild(beerImage);
-    mediaDiv.appendChild(hotWings);
-    mediaDiv.appendChild(nachoImage);
-    mediaDiv.appendChild(pizzaImage);
+//     mediaDiv.appendChild(beerImage);
+//     mediaDiv.appendChild(hotWings);
+//     mediaDiv.appendChild(nachoImage);
+//     mediaDiv.appendChild(pizzaImage);
 
-    mainBody.appendChild(mediaDiv)
-}
+//     mainBody.appendChild(mediaDiv)
+// }
 
 function addDescription() {
     let description = document.createElement('div')
@@ -73,7 +76,6 @@ function addDescription() {
     descText.innerText = 'VTT is your go to place for good food, good drinks, and good atmospohere! Happy hour from 4-6 daily!'
     description.appendChild(descText)
 
-    let mainBody = document.querySelector('#content')
     mainBody.appendChild(description)
 
 }
@@ -86,6 +88,19 @@ function addNavbar() {
     let menu = document.createElement('h4')
     let contact = document.createElement('h4')
 
+    menu.addEventListener('click', function() {
+        loadMenu();
+        // addMedia();
+    })
+
+    home.addEventListener('click', function() {
+        // Redirect to homepage
+        loadHome()
+    })
+
+    contact.addEventListener('click', function() {
+        addContactInfo();
+    })
     home.classList.add('nav-item')
     menu.classList.add('nav-item')
     contact.classList.add('nav-item')
@@ -98,7 +113,6 @@ function addNavbar() {
     navbar.appendChild(menu)
     navbar.appendChild(contact)
 
-    let mainBody = document.querySelector('#content')
     mainBody.appendChild(navbar)
 
 }
@@ -113,15 +127,29 @@ function addBottomBorder() {
     address.innerText = 'Village Top Tavern 555 Main St. Smalltown, USA'
 
     bottomBorder.appendChild(address)
-    let mainBody = document.querySelector('#content')
     mainBody.appendChild(bottomBorder)
 }
 
-addNavbar()
-addDiv()
-addDescription()
-addBottomBorder()
-// addMedia()
+function clearContent() {
+
+    let mainBody = document.querySelector('#content')
+    mainBody.innerHTML = ''
+    addNavbar()
+    // addBottomBorder()
+}
+
+function loadHome() {
+    mainBody.innerHTML = '';
+    addNavbar()
+    addDiv()
+    addDescription()
+    addBottomBorder()
+}
+
+loadHome()
+
+export { addNavbar, addBottomBorder, clearContent }
+
 /* <div id="navbar">
 <h4 class="nav-item">Home</h4>
 <h4 class="nav-item">Menu</h4>
