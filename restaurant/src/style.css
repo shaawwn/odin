@@ -7,9 +7,6 @@ p {
     margin: 0px;
 }
 
-h1 {
-    color: blue;
-}
 
 #content {
     width: 100vw;
@@ -161,4 +158,28 @@ keep aspect scale mostly */
 
 .item-description {
 
+}
+
+/* Text menu */
+
+.text-menu {
+    width: 75%;
+    background-color: beige;
+    margin: auto;
+    border-radius: 5px;
+}
+
+.text-menu-item {
+    display: flex;
+    justify-content: space-around;
+    /* border: 1px solid black; */
+}
+
+.text-menu-cat {
+    /* border: 1px solid black; */
+    text-align: center;
+}
+
+.text-menu-content {
+    text-decoration: underline;
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <style>
+            #container {
+                display: flex;
+                flex-direction: column;
+                border-radius: 5px;
+                background-color: grey;
+                width: 375px;
+                height: 400px;
+                justify-content: center;
+            }
+            #display {
+                /* width: 350px; */
+                width: 80%;
+                height: 60px;
+                margin: auto;
+                margin-top: 15px;
+                background-color: white;
+                border-radius: 5px;
+                text-align: right;
+                font-size: 48px;
+                padding: 5px;
+            }
+            #buttons {
+                width: 80%;
+                height: 300px;
+                background-color: white;
+                margin: auto;
+                border-radius: 5px;
+                display: grid;
+                grid-template-columns: 100px 100px 100px;
+                grid-template-rows: 80px 80px 80px;
+            }
+            .btn {
+                display: grid;
+                background-color: rgb(187, 171, 171);
+                text-align: center;
+                font-size: 32px;
+                padding: 20px
+                
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Practice page</h1>
+        <div id="container">
+            <div id="display">
+
+            </div>
+
+            <div id="buttons">
+                <button class='btn'>7</button>
+                <button class='btn'>8</button>
+                <button class='btn'>9</button>
+                <button class='btn'>4</button>
+                <button class='btn'>5</button>
+                <button class='btn'>6</button>
+                <button class='btn'>1</button>
+                <button class='btn'>2</button>
+                <button class='btn'>3</button>
+            </div>
+        </div>
+        <script>
+
+            function add(a, b) {
+                return a + b
+            }
+
+            document.querySelector('#display').innerText = 0
+
+            function operate(operation, a, b) {
+                let display = document.querySelector('#display')
+                let solution = operation(a, b)
+                display.innerText = solution
+            }
+
+            // let buttons = document.getElementsByClassName('btn')
+            let buttons = document.querySelectorAll('.btn')
+            console.log(buttons)
+            buttons.forEach(button => {
+                button.addEventListener('click', (e) => {
+                    let num = parseInt(document.querySelector('#display').innerText)
+                    console.log(typeof num)
+                    num += parseInt(e.target.innerText)
+                    console.log(num)
+                    document.querySelector('#display').innerText = '';
+                    document.querySelector('#display').innerText = num
+                })
+            })
+
+            var number = 0;
+            
+            console.log("Pre function", number)
+            
+            function changeNumber(number) {
+                number = 5;
+                return number
+            }
+
+            number = changeNumber(number)
+            changeNumber(number)
+            console.log("Post function", number)
+            // operate(add, 2, 2)
+        </script>
+    </body>
+</html>
