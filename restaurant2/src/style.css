@@ -1,0 +1,172 @@
+/* Globals */
+/* Font imported from https://www.cdnfonts.com/harry-potter.font */
+@import url('http://fonts.cdnfonts.com/css/harry-potter');
+html, body, #content {
+    font-family: 'Harry Potter', sans-serif;
+    color: white;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    background-color: purple;
+}
+
+
+.parallax {
+    background-image: url('./images/hogsheadsign.jpg');
+    height: 65%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    /* Fonts */
+    display: flex;
+    color: black;
+    text-align: center;
+    font-size: 48px;
+}
+
+.parallax-btn {
+    border-radius: 5px;
+    /* background-color: purple; */
+    font-size: 48px;
+}
+
+.banner-header {
+    font-size: 100px;
+    margin-bottom:10px;
+    margin-top: 0px;
+}
+
+.container-header-md {
+    font-size: 64px;
+}
+
+.banner-header-sm {
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+/* Navigation Bar */
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: rgb(146, 76, 146);
+    /* color: white; */
+    width: 100%;
+    /* padding: 5px; */
+}
+
+.navItem {
+    /* border: 2px solid black; */
+    font-size: 36px;
+    margin-left: 15px;
+    margin-right: 15px;
+    height: 100%;
+    padding: 5px;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.navItem:hover {
+    background-color: purple;
+}
+
+/* Containers */
+.container{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    /* background-color: purple; */
+    /* color: white; */
+}
+
+.container-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* height: 100%; */
+}
+
+.container-menu {
+    /* display: none; */
+}
+
+.container > h1 {
+    font-size: 100px;
+}
+
+.basic {
+    border: 3px solid black;
+    width: 80%;
+
+}
+
+#about {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: purple; */
+    padding: 20px;
+}
+
+.about-detail {
+    width: 50%;
+    border-radius: 10px;
+    background-color: rgb(146, 76, 146);
+    font-size: 36px;
+    text-align: center;
+    padding: 10px;
+    border: 7px solid rgb(54, 12, 82);
+    color: white;
+    margin-bottom: 20px;
+}
+
+.menu {
+    display: none;
+    background-image: url('./images/parchment.jpeg');
+    width: 80%;
+    color: rgb(80, 55, 41);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 100px;
+}
+
+.menu-category {
+    width: 40%;
+}
+
+.menu-header {
+    /* text-decoration: underline; */
+    margin-bottom: 0px;
+}
+
+.menu-item {
+    font-size: 48px;
+}
+
+
+/* Images */
+.background-image {
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+}
+
+
+/* Misc */
+
+.linebreak {
+    border: 0px;
+    height: 5px;
+    background-color: black;
+    width: 90%;
+}
+
+/* Testing */
+.test {
+    color: red;
+    font-family: 'Harry Potter', sans-serif;
+}
