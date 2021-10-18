@@ -3,12 +3,6 @@ console.log("Loading functions...")
 
 document.addEventListener('DOMContentLoaded', () => {
     // Load after dom content
-    // const todayBox = document.getElementsByName('today')[0];
-    // const dailyBox = document.getElementsByName('daily')[0];
-    // const weeklyBox = document.getElementsByName('weekly')[0];
-    // const monthlyBox = document.getElementsByName('monthly')[0];
-
-
     addBtnEventListeners();
 })
 
@@ -16,8 +10,6 @@ function addBtnEventListeners() {
     // Add evnet listeners to change the todo box
     let todoOptions = document.getElementsByClassName('box-item');
 
-
-    
     for(let i = 0; i < todoOptions.length;i++) {
         todoOptions[i].addEventListener('click', () => {
             console.log("DATA", todoOptions[i].innerText);
@@ -25,7 +17,6 @@ function addBtnEventListeners() {
             let todoBox = document.getElementsByName(keyword)[0]
             console.log(todoBox)
             loadTodoBox(keyword)
-            
         })
     }
 }
