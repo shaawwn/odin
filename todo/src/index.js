@@ -1,9 +1,9 @@
 import './style.css';
 import { testJSON } from './tests.js';
-
+import { test, addModal, openModal } from './todos.js';
 import { loadCalendar } from './calendar.js';
 
-
+// test()
 console.log("Scripts loading....")
 
 let tests = testJSON(); // Tests are dummy content such as dummy JSON data, etc
@@ -77,21 +77,24 @@ function addTodoContainer() {
 
     for (let i = 0; i < todoBoxes.length;i++) {
 
-        if(todoBoxes[i] === 'monthly') {
-            let monthly = loadCalendar();
-            boxContainer.appendChild(monthly)
-            monthly.style.display = 'block';
-            continue;
-        }
-        let boxDiv = document.createElement('div')
-        let boxDivHeader = document.createElement('p');
+        let boxDiv = document.createElement('div');
+        let boxDivHeader = document.createElement('p')
 
         boxDiv.classList.add('todo-box');
         boxDiv.setAttribute('name', todoBoxes[i])
         boxDivHeader.classList.add('header');
+        if(todoBoxes[i] === 'monthly') {
+
+            boxDiv.appendChild(loadCalendar());
+            // boxDiv.style.display = 'block';
+            boxContainer.appendChild(boxDiv)
+            continue
+
+        }
 
         if(todoBoxes[i] === 'daily') {
             boxDivHeader.innerText = todoBoxes[i][0].toUpperCase() + todoBoxes[i].slice(1) + ' Todos';
+            boxDiv.style.display = 'block';
         } else {
             boxDivHeader.innerText = todoBoxes[i][0].toUpperCase() + todoBoxes[i].slice(1) + "'s Todos" 
         }
@@ -100,10 +103,12 @@ function addTodoContainer() {
         if(todoBoxes[i] === 'today') { // This just sets today to display by default, everything else is set to 'none'
             boxDiv.style.display = 'none';
         }
+        
         boxDiv.appendChild(addTodos(todoBoxes[i]))
+        boxDiv.appendChild(addTodoBtn(todoBoxes[i]));
         boxContainer.appendChild(boxDiv);
     }
-
+    boxContainer.appendChild(addModal())
     content.appendChild(boxContainer);
 
 }
@@ -132,6 +137,21 @@ function addTodos(todo) {
         }
     }
     return todoList
+}
+
+function addTodoBtn(todoType) {
+    // Create the button and listener for adding todos
+    const todoBtn = document.createElement('span'); // Use a span?
+    todoBtn.classList.add('add-todo-btn');
+    todoBtn.setAttribute('name', todoType)
+
+    todoBtn.innerText = '+';
+    todoBtn.addEventListener('click', () => {
+        let modal = document.querySelectorAll('.modal')
+        // console.log(modal)
+        openModal(modal);
+    })
+    return todoBtn;
 }
 
 
@@ -180,5 +200,6 @@ function loadTodoBox(todo) {
         monthlyBox.style.display = 'block';
     }
 }
+
 
 loadPage();
