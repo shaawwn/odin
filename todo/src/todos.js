@@ -1,29 +1,27 @@
+import { Todo, weeklyTodo, monthlyTodo} from './todoclass.js';
+import { loadPage, addListeners, loadTodoBox, addTodoContainer, addBanner, addSidebar } from './index.js';
 // Manage Adding/Updating Todos here
 
 // Storage
-// Todos are stored in local storage with the following categories: Today, Daily, Weekly, Monthly
-
 const storage = localStorage
-// console.log("STORAGE in todo.js", localStorage)
-// localStorage.clear()
+// const allTodos = {
+//     'due': [],
+//     'daily': [],
+//     'weekly': [],
+//     'monthly': [],
+// }
 
-let daily = []
 
-let today = ['Add pending todos to today']
+// const newProject = {
+//     'due': [],
+//     'daily': [],
+//     'weekly': [],
+//     'monthly': [],
+// }
 
-let weekly = {
-    'sunday': [],
-    'monday': [],
-    'tuesday': [],
-    'wednesday': [],
-    'thursday': [],
-    'friday': [],
-    'saturday': []
-}
+// storage.setItem('new project', JSON.stringify(newProject))
+// console.log(storage)
 
-let monthly = {
-    
-}
 
 function checkLocalStorage(todoType, storage) {
     // Check status of local storage, if none exists, initialize, else do nothing
@@ -44,11 +42,6 @@ function checkLocalStorage(todoType, storage) {
     }
 }
 
-// let dailyStorage = checkLocalStorage('daily', storage)
-// // console.log("DAILY STORAGE", dailyStorage['8am'])
-// dailyStorage.push("do even more random stuff")
-// storage.setItem('daily', JSON.stringify(dailyStorage))
-// console.log(storage)
 function test() {
     // console.log("Todo js file loading...")
 }
@@ -71,7 +64,7 @@ function addModal() {
 
     // Add input for creating a new Todo
     // modal.style.display = 'block'; // Testing only
-    modal.appendChild(addTodoForm())
+    // modal.appendChild(addTodoForm())
     return modal
 }
 
@@ -141,15 +134,31 @@ function checkRadioBtn(button) {
     })
 
 }
-function addTodo(todoType, todo) {
-    // Add a todo to local storage
-    // When 'Add todo is clicked in the form, take the todo and save it
-    // storage.setItem()
-    console.log("Adding: ", todo)
-    // alert("To do added")
-    closeModal()
 
+let mondayTodo = new weeklyTodo('weekly', 'Test', 'This is a new test', 'monday');
+
+function addTodo(todoType, todo, projectName) {
+    // Add a todo to local storage
+
+    let todoProject = JSON.parse(storage[projectName])
+    
+    todoProject['todos'][todoType].push(todo)
+    storage.setItem(projectName, JSON.stringify(todoProject))
+    loadTodoBox(todoType)
 }
+
+function addProject(projectName) {
+    // Add a new project to todo list, project is JSON object, same as allTodos
+    // that is stored within allTodos
+    const newProject = {
+        'due': [],
+        'daily': [],
+        'weekly': [],
+        'monthly': [],
+    }
+    storage.setItem(projectName, newProject);
+}
+
 
 function openModal() {
     // Open the modal when the appreopriate element is clicked (in this case the Add todo button)
@@ -163,6 +172,7 @@ function openModal() {
 function closeModal() {
     // Close a modal when user hits the X in the top of the screen on the modal (or clicks outside modal)
     let modal = document.querySelector('.modal');
+    modal.innerHTML = '';
     modal.style.display = 'none';
 }
-export { test, addModal, openModal }
+export { test, addProject, addTodo, addModal, openModal, closeModal }
