@@ -4,7 +4,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: 'development',
     entry: {
-        index: './src/index.js'
+        index: './src/index.js',
+        todos: './src/todos.js',
+        todoclass: './src/todoclass.js',
     },
     devtool: 'inline-source-map',
     devServer: {
