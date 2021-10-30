@@ -8,15 +8,21 @@ import { loadCalendar } from './calendar.js';
 
 console.log("Scripts loading....")
 const storage = localStorage;
-const generalTodos = new Project('general');
+// const generalTodos = new Project('general');
 // storage.setItem('general', JSON.stringify(generalTodos))
 // storage.clear()
-
+// console.log(storage)
 
 function loadPage(projectName) {
     // Main function for adding elements to the DOM
 
     document.body.innerHTML = '';
+    // initialize storage if none
+    console.log("STORAGE", storage)
+    if(storage.length === 0) {
+        let generalTodos = new Project('general');
+        storage.setItem('general', JSON.stringify(generalTodos))
+    }
 
     let contentDiv = document.createElement('div') // Content div is all elements of the the body after the banner
     contentDiv.id = 'content'
@@ -183,6 +189,8 @@ function loadTodos(todo, projectName) {
 
         todoList.push(projectStorage.todos[todo][i])
     }
+    console.log("loading todos function", todoList)
+
     return todoList
 }
 
