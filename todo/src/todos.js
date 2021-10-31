@@ -23,28 +23,6 @@ const storage = localStorage
 // console.log(storage)
 
 
-function checkLocalStorage(todoType, storage) {
-    // Check status of local storage, if none exists, initialize, else do nothing
-    if(storage.getItem(todoType) === null) {
-        console.log("Storage is not created yet")
-        if (todoType === 'weekly') {
-            storage.setItem('weekly', JSON.stringify(weekly))
-        } else if(todoType === 'daily') {
-            storage.setItem('daily', JSON.stringify(daily))
-        } else if(todoType === 'monthly') {
-            storage.setItem('monthly', JSON.stringify(monthly))
-        }
-        return JSON.parse(storage.getItem(todoType))
-    } else {
-        // return true
-        return JSON.parse(storage.getItem(todoType))
-        // console.group("STORAGE CHECK", storage.getItem(todoType))
-    }
-}
-
-function test() {
-    // console.log("Todo js file loading...")
-}
 
 
 function addModal() {
@@ -147,6 +125,18 @@ function addTodo(todoType, todo, projectName) {
     loadTodoBox(todoType)
 }
 
+function removeTodo(todo, projectName) {
+    //Remove a todo when it's deleted/completed
+    // Get 'type' of todo
+    console.log(todo.type)
+    let todoProject = JSON.parse(storage[projectName])
+    let indexOfTodo = todoProject.todos[todo.type].findIndex(e => e.title === todo.title);
+    todoProject.todos[todo.type].splice(indexOfTodo, 1)
+    storage.setItem(projectName, JSON.stringify(todoProject))
+    loadPage(projectName)
+
+}
+
 function addProject(projectName) {
     // Add a new project to todo list, project is JSON object, same as allTodos
     // that is stored within allTodos
@@ -175,4 +165,4 @@ function closeModal() {
     modal.innerHTML = '';
     modal.style.display = 'none';
 }
-export { test, addProject, addTodo, addModal, openModal, closeModal }
+export { addProject, addTodo, removeTodo, addModal, openModal, closeModal }

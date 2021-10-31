@@ -1,7 +1,7 @@
 import './style.css';
 // import { testJSON } from './tests.js';
 import { Todo, weeklyTodo, monthlyTodo, Project } from './todoclass.js';
-import { test, addProject, addTodo, addModal, openModal, closeModal } from './todos.js';
+import { test, addProject, addTodo, removeTodo, addModal, openModal, closeModal } from './todos.js';
 import { loadCalendar } from './calendar.js';
 
 
@@ -15,13 +15,13 @@ const storage = localStorage;
 
 function loadPage(projectName) {
     // Main function for adding elements to the DOM
-
+    console.log("STORAGE AT START OF LOADPAGE()", storage)
     document.body.innerHTML = '';
     // initialize storage if none
-    console.log("STORAGE", storage)
     if(storage.length === 0) {
         let generalTodos = new Project('general');
         storage.setItem('general', JSON.stringify(generalTodos))
+        // storage.clear()
     }
 
     let contentDiv = document.createElement('div') // Content div is all elements of the the body after the banner
@@ -116,17 +116,17 @@ function addTodoContainer(projectName) {
         }
         if(todoBoxes[i] === 'daily') {
             let dailyTodos = loadTodos('daily', projectName);
-            boxDiv.appendChild(addTodos(dailyTodos))
+            boxDiv.appendChild(addTodos(dailyTodos, projectName))
             boxDiv.style.display = 'none';
         } 
         if(todoBoxes[i] === 'weekly') {
             let weeklyTodos = loadTodos('weekly', projectName);
-            boxDiv.appendChild(addTodos(weeklyTodos))
+            boxDiv.appendChild(addTodos(weeklyTodos, projectName))
             boxDiv.style.display = 'none'
         }
         if(todoBoxes[i] === 'today') { // This just sets today to display by default, everything else is set to 'none'
             let todayTodos = loadTodos('today', projectName)
-            boxDiv.appendChild(addTodos(todayTodos))
+            boxDiv.appendChild(addTodos(todayTodos, projectName))
             boxDiv.style.display = 'flex';
         }
 
@@ -136,7 +136,7 @@ function addTodoContainer(projectName) {
     content.appendChild(boxContainer);
 }
 
-function addTodos(todos) {
+function addTodos(todos, projectName) {
     // Parse todos and add to container, todos is an array of todos
 
     if(todos.length === 0) {
@@ -151,28 +151,42 @@ function addTodos(todos) {
 
         for (let i = 0; i < todos.length;i++) {
             let newTodo = document.createElement('div');
-            let checkBox = document.createElement('i');
+            // let checkBox = document.createElement('i');
+            let todoDetails = document.createElement('div');
             let todoName = document.createElement('p');
             let todoDesc = document.createElement('p');
+            let removeBtn = document.createElement('button');
 
             todoName.innerText = todos[i].title
             todoDesc.innerText = todos[i].desc;
-            newTodo.appendChild(checkBox);
-            newTodo.appendChild(todoName);
-            newTodo.appendChild(todoDesc);
+            removeBtn.innerText = 'Remove';
+            removeBtn.classList.add('btn');
+            removeBtn.classList.add('remove-btn');
+            todoDetails.classList.add('todo-details');
+
+            removeBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                removeTodo(todos[i], projectName)
+            })
+
+            todoDetails.appendChild(todoName);
+            todoDetails.appendChild(todoDesc)
+            newTodo.appendChild(todoDetails);
+            newTodo.appendChild(removeBtn);
 
             newTodo.classList.add('todo-card');
 
             todoContainer.appendChild(newTodo);
 
             newTodo.addEventListener('click', () => {
-                if(newTodo.className.search('finished') != -1) {
-                    newTodo.classList.remove('finished')
+                if(todoDetails.className.search('finished') != -1) {
+                    todoDetails.classList.remove('finished')
 
                 } else {
-                    newTodo.classList.add('finished')
+                    todoDetails.classList.add('finished')
                 }
             })
+
         }
         return todoContainer
     }
@@ -188,6 +202,7 @@ function loadTodos(todo, projectName) {
     for (let i = 0; i < projectStorage.todos[todo].length;i++) {
 
         todoList.push(projectStorage.todos[todo][i])
+        console.log("INDEX OF", projectStorage.todos[todo].indexOf(projectStorage.todos[todo][i]))
     }
     console.log("loading todos function", todoList)
 
