@@ -8,10 +8,12 @@ let storage = localStorage
 
 class Todo {
     // Type: Due, Daily, Weekly, Monthly
-    constructor(type, title, desc) {
+    constructor(type, title, desc, id, finished=false) {
         this.type = type;
         this.title = title;
         this.desc = desc;
+        this.finished = finished
+        this.id = id
     }
 }
 
@@ -41,15 +43,16 @@ class Project {
             'weekly': [],
             'monthly': [],
         }
+        this.numTodos = 0 // numTodo increments with each new todo, and functions as a unique ID for each todo
     }
 
 }
 
 
-let newProject = new Project('default')
+// let newProject = new Project('default')
 
 
-function addTodo() {
+// function addTodo() {
 
-}
+// }
 export {Todo, weeklyTodo, monthlyTodo, Project}

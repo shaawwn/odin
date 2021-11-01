@@ -120,6 +120,7 @@ p {
 .todo-box > .header {
     text-align: center;
     color: rgb(100,100,100);
+    margin-bottom: 20px;
 }
 
 .todo-box > ul {

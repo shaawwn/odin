@@ -121,6 +121,7 @@ function addTodo(todoType, todo, projectName) {
     let todoProject = JSON.parse(storage[projectName])
     
     todoProject['todos'][todoType].push(todo)
+    todoProject['numTodos'] += 1;
     storage.setItem(projectName, JSON.stringify(todoProject))
     loadTodoBox(todoType)
 }
@@ -130,12 +131,30 @@ function removeTodo(todo, projectName) {
     // Get 'type' of todo
     console.log(todo.type)
     let todoProject = JSON.parse(storage[projectName])
-    let indexOfTodo = todoProject.todos[todo.type].findIndex(e => e.title === todo.title);
+    let indexOfTodo = todoProject.todos[todo.type].findIndex(e => e.id === todo.id); // Changed title to id
     todoProject.todos[todo.type].splice(indexOfTodo, 1)
     storage.setItem(projectName, JSON.stringify(todoProject))
     loadPage(projectName)
 
 }
+
+
+function checkFinished(todo, projectName) {
+    // Mark a todo as finished or unfinished
+    let todoProject = JSON.parse(storage[projectName])
+    let indexOfTodo = todoProject.todos[todo.type].findIndex(e => e.id === todo.id);
+    console.log(indexOfTodo)
+    if(todo.finished === true) {
+        todo.finished = false
+        todoProject.todos[todo.type][indexOfTodo] = todo
+        
+    } else if(todo.finished === false) {
+        todo.finished = true
+        todoProject.todos[todo.type][indexOfTodo] = todo
+    }
+    storage.setItem(projectName, JSON.stringify(todoProject))
+}
+
 
 function addProject(projectName) {
     // Add a new project to todo list, project is JSON object, same as allTodos
@@ -165,4 +184,4 @@ function closeModal() {
     modal.innerHTML = '';
     modal.style.display = 'none';
 }
-export { addProject, addTodo, removeTodo, addModal, openModal, closeModal }
+export { addProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished }

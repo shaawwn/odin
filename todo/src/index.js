@@ -1,7 +1,7 @@
 import './style.css';
 // import { testJSON } from './tests.js';
 import { Todo, weeklyTodo, monthlyTodo, Project } from './todoclass.js';
-import { test, addProject, addTodo, removeTodo, addModal, openModal, closeModal } from './todos.js';
+import { test, addProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished } from './todos.js';
 import { loadCalendar } from './calendar.js';
 
 
@@ -15,7 +15,7 @@ const storage = localStorage;
 
 function loadPage(projectName) {
     // Main function for adding elements to the DOM
-    console.log("STORAGE AT START OF LOADPAGE()", storage)
+    // console.log("STORAGE AT START OF LOADPAGE()", storage)
     document.body.innerHTML = '';
     // initialize storage if none
     if(storage.length === 0) {
@@ -150,13 +150,20 @@ function addTodos(todos, projectName) {
         todoContainer.classList.add('todo-container');
 
         for (let i = 0; i < todos.length;i++) {
+            // console.log("TODOS", todos[i])
             let newTodo = document.createElement('div');
             // let checkBox = document.createElement('i');
             let todoDetails = document.createElement('div');
             let todoName = document.createElement('p');
             let todoDesc = document.createElement('p');
+            let todoBool = todos[i].finished
             let removeBtn = document.createElement('button');
 
+            if(todoBool === true){
+                todoDetails.classList.add('finished')
+            } else if(todoBool === false) {
+                todoDetails.classList.remove('finished')
+            }
             todoName.innerText = todos[i].title
             todoDesc.innerText = todos[i].desc;
             removeBtn.innerText = 'Remove';
@@ -179,11 +186,17 @@ function addTodos(todos, projectName) {
             todoContainer.appendChild(newTodo);
 
             newTodo.addEventListener('click', () => {
-                if(todoDetails.className.search('finished') != -1) {
-                    todoDetails.classList.remove('finished')
 
-                } else {
+                if(todoBool === false){
+
+                    checkFinished(todos[i], projectName)
+                    todoDetails.classList.remove('finished')
+                    loadPage(projectName)
+                } else if(todoBool === true) {
+
+                    checkFinished(todos[i], projectName)
                     todoDetails.classList.add('finished')
+                    loadPage(projectName)
                 }
             })
 
@@ -202,9 +215,9 @@ function loadTodos(todo, projectName) {
     for (let i = 0; i < projectStorage.todos[todo].length;i++) {
 
         todoList.push(projectStorage.todos[todo][i])
-        console.log("INDEX OF", projectStorage.todos[todo].indexOf(projectStorage.todos[todo][i]))
+        // console.log("INDEX OF", projectStorage.todos[todo].indexOf(projectStorage.todos[todo][i]))
     }
-    console.log("loading todos function", todoList)
+    // console.log("loading todos function", todoList)
 
     return todoList
 }
@@ -246,7 +259,10 @@ function addTodoForm(projectName) {
     })
 
     submitBtn.addEventListener('click', () => {
-        let newTodo = new Todo (todoType.value, todoName.value, todoDesc.value)
+        console.log(JSON.parse(storage[projectName]).numTodos)
+        let todoID = JSON.parse(storage[projectName]).numTodos;
+        // console.log("ID: ", todoID)
+        let newTodo = new Todo (todoType.value, todoName.value, todoDesc.value, todoID)
         addTodo(todoType.value, newTodo, projectName)
 
         closeModal()
@@ -337,25 +353,25 @@ function loadTodoBox(todo) {
     const weeklyBox = document.getElementsByName('weekly')[0];
     const monthlyBox = document.getElementsByName('monthly')[0];
     if(todo === 'today') {
-        todayBox.style.display = 'block';
+        todayBox.style.display = 'flex';
         dailyBox.style.display = 'none';
         weeklyBox.style.display = 'none';
         monthlyBox.style.display = 'none';
     } else if(todo === 'daily') {
         todayBox.style.display = 'none';
-        dailyBox.style.display = 'block';
+        dailyBox.style.display = 'flex';
         weeklyBox.style.display = 'none';
         monthlyBox.style.display = 'none';
     } else if(todo === 'weekly') {
         todayBox.style.display = 'none';
         dailyBox.style.display = 'none';
-        weeklyBox.style.display = 'block';
+        weeklyBox.style.display = 'flex';
         monthlyBox.style.display = 'none';
     } else if (todo === 'monthly') {
         todayBox.style.display = 'none';
         dailyBox.style.display = 'none';
         weeklyBox.style.display = 'none';
-        monthlyBox.style.display = 'block';
+        monthlyBox.style.display = 'flex';
     }
 }
 
