@@ -13,9 +13,9 @@ const storage = localStorage;
 // storage.clear()
 // console.log(storage)
 
-function loadPage(projectName) {
+function loadPage(projectName, todoType) {
     // Main function for adding elements to the DOM
-    // console.log("STORAGE AT START OF LOADPAGE()", storage)
+
     document.body.innerHTML = '';
     // initialize storage if none
     if(storage.length === 0) {
@@ -25,12 +25,15 @@ function loadPage(projectName) {
     }
 
     let contentDiv = document.createElement('div') // Content div is all elements of the the body after the banner
+    let boxContainer = document.createElement('div'); // Added Box container here instead of in add container
+    boxContainer.id = 'box-container';
     contentDiv.id = 'content'
     document.body.appendChild(addBanner())
     document.body.appendChild(contentDiv)
     contentDiv.appendChild(addSidebar())
+    contentDiv.appendChild(boxContainer);
 
-    addTodoContainer(projectName)
+    addTodoContainer(projectName, todoType);
     addListeners();
 }
 
@@ -82,7 +85,42 @@ function addSidebar() {
 }
 
 
-function addTodoContainer(projectName) {
+function addTodoContainer(projectName, todoType) {
+    const content = document.querySelector('#content')
+    // const boxContainer = document.createElement('div'); // Added boxContainer to loadPage() instead of creating it here
+    // boxContainer.id = 'box-container';
+    const boxContainer = document.querySelector('#box-container');
+    boxContainer.innerHTML = '';
+
+    let boxDiv = document.createElement('div');
+    let boxDivHeader = document.createElement('div');
+    const addBtn = addTodoBtn(projectName);
+
+    boxDivHeader.classList.add('header');
+    boxDiv.classList.add('todo-box')
+    boxDiv.setAttribute('name', todoType);
+    addBtn.innerText = 'Add Todo';
+
+    boxDivHeader.innerText = todoType[0].toUpperCase() + todoType.slice(1) + ' Todos';
+    boxDiv.appendChild(boxDivHeader);
+    boxDiv.appendChild(addBtn);
+
+    if(todoType === 'monthly') {
+        boxDiv.appendChild(loadCalendar());
+        boxContainer.appendChild(boxDiv);
+    } else {
+        let todos = loadTodos(todoType, projectName);
+        boxDiv.appendChild(addTodos(todos, projectName))
+        boxDiv.style.display = 'flex';
+    }
+
+    boxContainer.appendChild(boxDiv);
+    boxContainer.appendChild(addModal());
+    content.appendChild(boxContainer);
+}
+
+
+function addTodoContainerx(projectName) {
     // Add containers for each todo category to be displayed in 'mailbox' style
     // Load 'general' by default
     const todoBoxes = ['today', 'daily', 'weekly', 'monthly'];
@@ -262,7 +300,7 @@ function addTodoForm(projectName) {
         console.log(JSON.parse(storage[projectName]).numTodos)
         let todoID = JSON.parse(storage[projectName]).numTodos;
         // console.log("ID: ", todoID)
-        let newTodo = new Todo (todoType.value, todoName.value, todoDesc.value, todoID)
+        let newTodo = new Todo (todoType.value, todoName.value, todoDesc.value,todoID)
         addTodo(todoType.value, newTodo, projectName)
 
         closeModal()
@@ -339,7 +377,10 @@ function addListeners() {
         todoOptions[i].addEventListener('click', () => {
             let keyword = todoOptions[i].innerText[0].toLowerCase() + todoOptions[i].innerText.slice(1);
             let todobox = document.getElementsByName(keyword)[0];
-            loadTodoBox(keyword)
+
+            // loadTodoBox(keyword);
+            addTodoContainer('general', keyword);
+
         })
     }
 }
@@ -376,7 +417,7 @@ function loadTodoBox(todo) {
 }
 
 
-loadPage('general');
+loadPage('general', 'today');
 // addListeners();
 
 export { loadPage, addListeners, loadTodoBox, addTodoContainer, addBanner, addSidebar }
