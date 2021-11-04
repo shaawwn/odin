@@ -77,11 +77,10 @@ const calculator = new Calculator()
 // Add digit updates to display
 digits.forEach(digit => {digit.addEventListener('click', () => {
     if (calculator.currentOperand !== '' && calculator.previousOperand !== '') {
-        operDisplay.innerText = display.innerText
-        display.innerText = digit.innerText
+        operDisplay.innerText = calcDisplay.innerText // changed 'display' to calcDisplay since I think it was a type
+        calcDisplay.innerText = digit.innerText
         // calculator.updateDisplay(digit.innerText)
     } else {
-        console.log("UPDATING DISPLAY", calcDisplay, operDisplay)
         calculator.updateDisplay(digit.innerText)
     }
     // calculator.updateDisplay(digit.innerText)
@@ -119,11 +118,11 @@ operators.forEach(operator => {operator.addEventListener('click', () => {
     } else if (calcDisplay !== '' && calculator.previousOperand === '') {
         calculator.previousOperand = parseInt(calcDisplay.innerText)
         operDisplay.innerText = calculator.previousOperand + calculator.operator
-        calcDisplay.innerText = '0'
+        // calcDisplay.innerText = '0'
     } else if(calculator.currentOperand !== '' && calculator.previousOperand !== '') {
         console.log("Both operands")
         // calcDisplay.innerText = '0'
-        solution = calculator.operate()
+        let solution = calculator.operate()
 
         // Update soltuion and reset operands
         operDisplay.innerText += calculator.operator + calcDisplay.innerText
@@ -135,7 +134,7 @@ operators.forEach(operator => {operator.addEventListener('click', () => {
     
     else if(calcDisplay !== '' && calculator.previousOperand !== '') {
         calculator.currentOperand = parseInt(calcDisplay.innerText)
-        solution = calculator.operate()
+        let solution = calculator.operate()
         calcDisplay.innerText = solution
         // If another number is entered, it needs to start a new digit sequence
         calculator.previousOperand = solution
@@ -149,7 +148,7 @@ equals.addEventListener('click', () => {
         console.log("No operation when pressing equals")
     } else {
         calculator.currentOperand = parseInt(calcDisplay.innerText)
-        solution = calculator.operate()
+        let solution = calculator.operate()
         calcDisplay.innerText = solution;
     }
     calculator.currentOperand = '';
