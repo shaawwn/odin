@@ -1,4 +1,4 @@
-import { Todo, weeklyTodo, monthlyTodo} from './todoclass.js';
+import { Todo, weeklyTodo, Project, monthlyTodo} from './todoclass.js';
 import { loadPage, addListeners, loadTodoBox, addTodoContainer, addBanner, addSidebar } from './index.js';
 // Manage Adding/Updating Todos here
 
@@ -123,7 +123,7 @@ function addTodo(todoType, todo, projectName) {
     todoProject['todos'][todoType].push(todo)
     todoProject['numTodos'] += 1;
     storage.setItem(projectName, JSON.stringify(todoProject))
-    loadTodoBox(todoType)
+    // loadTodoBox(todoType, todoType)
 }
 
 function removeTodo(todo, projectName) {
@@ -134,7 +134,8 @@ function removeTodo(todo, projectName) {
     let indexOfTodo = todoProject.todos[todo.type].findIndex(e => e.id === todo.id); // Changed title to id
     todoProject.todos[todo.type].splice(indexOfTodo, 1)
     storage.setItem(projectName, JSON.stringify(todoProject))
-    loadPage(projectName)
+    console.log("Removing todo")
+    loadPage(projectName, todo.type)
 
 }
 
@@ -159,15 +160,16 @@ function checkFinished(todo, projectName) {
 function addProject(projectName) {
     // Add a new project to todo list, project is JSON object, same as allTodos
     // that is stored within allTodos
-    const newProject = {
-        'due': [],
-        'daily': [],
-        'weekly': [],
-        'monthly': [],
-    }
-    storage.setItem(projectName, newProject);
+    let newProject = new Project(projectName);
+    storage.setItem(projectName, JSON.stringify(newProject));
 }
 
+function removeProject(projectName) {
+    if(confirm("Are you sure you want to delete project?")) {
+        storage.removeItem(projectName)
+        loadPage('general', 'today');
+    } 
+}
 
 function openModal() {
     // Open the modal when the appreopriate element is clicked (in this case the Add todo button)
@@ -184,4 +186,4 @@ function closeModal() {
     modal.innerHTML = '';
     modal.style.display = 'none';
 }
-export { addProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished }
+export { addProject, removeProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished }

@@ -1,7 +1,7 @@
 import './style.css';
 // import { testJSON } from './tests.js';
 import { Todo, weeklyTodo, monthlyTodo, Project } from './todoclass.js';
-import { test, addProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished } from './todos.js';
+import { test, addProject, removeProject, addTodo, removeTodo, addModal, openModal, closeModal, checkFinished } from './todos.js';
 import { loadCalendar } from './calendar.js';
 
 
@@ -28,17 +28,17 @@ function loadPage(projectName, todoType) {
     let boxContainer = document.createElement('div'); // Added Box container here instead of in add container
     boxContainer.id = 'box-container';
     contentDiv.id = 'content'
-    document.body.appendChild(addBanner())
+    document.body.appendChild(addBanner(projectName))
     document.body.appendChild(contentDiv)
     contentDiv.appendChild(addSidebar())
     contentDiv.appendChild(boxContainer);
 
     addTodoContainer(projectName, todoType);
-    addListeners();
+    addListeners(projectName);
 }
 
 
-function addBanner() {
+function addBanner(projectName) {
     // Add a header banner for the webpage
     let banner = document.createElement('div')
     let bannerHeader = document.createElement('p');
@@ -46,7 +46,7 @@ function addBanner() {
     banner.id = 'banner';
     bannerHeader.classList.add('header')
 
-    bannerHeader.innerText = "User's Todo List";
+    bannerHeader.innerText = `User's Todo List for ${projectName}`;
 
     banner.appendChild(bannerHeader);
 
@@ -56,16 +56,20 @@ function addBanner() {
 
 function addSidebar() {
     // Add the sidebar to the DOM
+    console.log("storage in addSidebar()", storage)
     let sidebar = document.createElement('div');
     let addProjectBtn = document.createElement('button');
     let boxes = ['Today', 'Daily', 'Weekly', 'Monthly']
     let linebreak = document.createElement('hr');
+    let projectHeader = document.createElement('p');
+
 
     sidebar.id = 'sidebar';
     sidebar.classList.add('container');
     addProjectBtn.classList.add('btn');
     linebreak.classList.add('linebreak');
-
+    projectHeader.classList.add('header');
+    projectHeader.innerText = 'Projects';
     addProjectBtn.innerText = '+ Project';
     addProjectBtn.addEventListener('click', () => {
         addNewProject()
@@ -79,11 +83,63 @@ function addSidebar() {
         sidebar.appendChild(navHeader)
     }
     sidebar.appendChild(linebreak);
+    // sidebar.appendChild(projectHeader);
     sidebar.appendChild(addProjectBtn);
+
+    let projects = Object.keys(storage);
+    for(let i = 0; i < projects.length; i++) {
+        // // Add an optiont to load project into main window
+        // let projectDiv = document.createElement('div');
+        // let projectSelect = document.createElement('button');
+        // let removeProject = document.createElement('button');
+
+        // projectDiv.classList.add('project-select');
+        // projectSelect.innerText = projects[i];
+        // projectSelect.classList.add('btn');
+        // projectSelect.classList.add('btn-sm');
+        // removeProject.classList.add('btn');
+        // removeProject.classList.add('remove-project-btn');
+        // removeProject.innerText = 'X';
+
+        // projectDiv.appendChild(projectSelect);
+        // projectDiv.appendChild(removeProject);
+        // sidebar.appendChild(projectDiv);
+
+        // projectSelect.addEventListener('click', () => {
+        //     loadPage(projects[i], 'today');
+        // })
+        sidebar.append(addProjectsToSidebar(projects[i]))
+    }
 
     return sidebar;
 }
 
+function addProjectsToSidebar(project) {
+    let projectDiv = document.createElement('div');
+    let projectSelect = document.createElement('button');
+    let removeProjectBtn = document.createElement('button');
+
+    projectDiv.classList.add('project-select');
+    projectSelect.innerText = project;
+    projectSelect.classList.add('btn');
+    projectSelect.classList.add('btn-sm');
+    removeProjectBtn.classList.add('btn');
+    removeProjectBtn.classList.add('remove-project-btn');
+    removeProjectBtn.innerText = 'X';
+
+    projectDiv.appendChild(projectSelect);
+    projectDiv.appendChild(removeProjectBtn);
+    // sidebar.appendChild(projectDiv);
+
+    projectSelect.addEventListener('click', () => {
+        loadPage(project, 'today');
+    })
+
+    removeProjectBtn.addEventListener('click', () => {
+        removeProject(project);
+    })
+    return projectDiv
+}
 
 function addTodoContainer(projectName, todoType) {
     const content = document.querySelector('#content')
@@ -100,13 +156,14 @@ function addTodoContainer(projectName, todoType) {
     boxDiv.classList.add('todo-box')
     boxDiv.setAttribute('name', todoType);
     addBtn.innerText = 'Add Todo';
-
+    console.log("BOX HEADER", boxDivHeader, todoType)
     boxDivHeader.innerText = todoType[0].toUpperCase() + todoType.slice(1) + ' Todos';
     boxDiv.appendChild(boxDivHeader);
     boxDiv.appendChild(addBtn);
 
     if(todoType === 'monthly') {
         boxDiv.appendChild(loadCalendar());
+        boxDiv.style.display = 'flex';
         boxContainer.appendChild(boxDiv);
     } else {
         let todos = loadTodos(todoType, projectName);
@@ -304,7 +361,7 @@ function addTodoForm(projectName) {
         addTodo(todoType.value, newTodo, projectName)
 
         closeModal()
-        loadPage(projectName);
+        loadPage(projectName, todoType.value);
 
     })
     
@@ -349,28 +406,46 @@ function addNewProject() {
     const newProjectHeader = document.createElement('p');
     const projectName = document.createElement('input');
     const projectDescription = document.createElement('textarea')
+    const closeBtn = document.createElement('button');
     const submitBtn = document.createElement('button');
 
 
     newProjectForm.classList.add('modal-form');
     newProjectHeader.classList.add('header');
+    closeBtn.classList.add('btn');
+    closeBtn.classList.add('close-btn');
+    closeBtn.innerText = 'X'
     submitBtn.classList.add('btn');
     submitBtn.innerText = 'Add Project';
 
+
     newProjectHeader.innerText = 'Add New Project';
+    newProjectForm.appendChild(closeBtn);
     newProjectForm.appendChild(newProjectHeader);
     newProjectForm.appendChild(projectName);
     newProjectForm.appendChild(projectDescription);
+    // newProjectForm.appendChild(closeBtn);
     newProjectForm.appendChild(submitBtn);
 
     modal.appendChild(newProjectForm);
 
+    closeBtn.addEventListener('click', () => {
+        closeModal();
+    })
+
+    submitBtn.addEventListener('click', () => {
+        console.log("New project name: ", projectName.value)
+        addProject(projectName.value)
+        closeModal();
+        console.log("PRJECT NAME", projectName.value)
+        loadPage(projectName.value, 'today');
+    })
     modal.style.display = 'block';
     boxContainer.appendChild(modal);
 }
 
 
-function addListeners() {
+function addListeners(projectName) {
     // Add listeners to DOM elements
     let todoOptions = document.getElementsByClassName('box-item');
     for (let i = 0; i < todoOptions.length;i++) {
@@ -379,7 +454,7 @@ function addListeners() {
             let todobox = document.getElementsByName(keyword)[0];
 
             // loadTodoBox(keyword);
-            addTodoContainer('general', keyword);
+            addTodoContainer(projectName, keyword);
 
         })
     }
@@ -417,6 +492,10 @@ function loadTodoBox(todo) {
 }
 
 
+function askName() {
+    //pass
+}
+// By default, load 'General' todos when visitng the page
 loadPage('general', 'today');
 // addListeners();
 
