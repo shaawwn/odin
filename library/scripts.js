@@ -94,21 +94,31 @@ function displayLibraryStorage() {
 
 
 submitButton.addEventListener('click', () => {
-    
-    addToLibrary()
-    clearForm()
+
+    if (addToLibrary() === false) {
+        // alert("Please enter the required fields.")
+    } else {
+        addToLibrary()
+        clearForm()
+    }
+    // clearForm()
 }) 
 
 
 function addToLibrary() {
     let form = document.querySelector('#book-submit')
-    let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
-    libraryStorage.setItem(`${form.title.value}`, JSON.stringify(newerBook))
+    if (!form.title.validity.valid||!form.author.validity.valid||!form.pages.validity.valid) {
+        alert("Please enter the required (in red) fields.")
+        return false
 
-    library.push(newerBook)
-    displayLibraryStorage()
+    } else {
+        let newerBook = new Book(form.title.value, form.author.value, form.pages.value, form.read.value)
+        libraryStorage.setItem(`${form.title.value}`, JSON.stringify(newerBook))
+    
+        library.push(newerBook)
+        displayLibraryStorage()
 
-    return false
+    }
 }
 
 
