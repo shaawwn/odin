@@ -271,6 +271,15 @@ ul > li {
 }
 
 
+.weekly {
+    display: flex;
+
+}
+
+.weekly > .calendar-day {
+    width: 150px;
+    height: 150px;
+}
 /* Modals */
 
 .modal {
