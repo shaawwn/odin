@@ -1,2 +1,5 @@
 grid-practice.html
 ./calculator/.eslintrc.json
+node_modules
+package-lock.json
+package.json
