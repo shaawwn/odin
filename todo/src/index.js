@@ -385,12 +385,6 @@ function addTodoForm(projectName, todo) {
             todoType.appendChild(option)
         }
     }
-    // for (let i = 0; i < todoTypes.length;i++) {
-    //     let option = document.createElement('option');
-    //     option.value = todoTypes[i]
-    //     option.innerText = todoTypes[i][0].toUpperCase() + todoTypes[i].slice(1)
-    //     todoType.appendChild(option)
-    // }
 
     closeBtn.addEventListener('click', () => {
         closeModal()
