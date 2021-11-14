@@ -165,6 +165,9 @@ function addTodoContainer(projectName, todoType) {
         boxDiv.appendChild(loadCalendar());
         boxDiv.style.display = 'flex';
         boxContainer.appendChild(boxDiv);
+    } else if(todoType === 'weekly'){
+        boxDiv.appendChild(loadWeekly(projectName));
+        boxDiv.style.display = 'flex';
     } else {
         let todos = loadTodos(todoType, projectName);
         boxDiv.appendChild(addTodos(todos, projectName))
@@ -317,7 +320,23 @@ function loadTodos(todo, projectName) {
     return todoList
 }
 
-function addTodoForm(projectName) {
+function weeklyTodoForm() {
+    // Variation of todoForm with days of week as options instead of todo type, supplemented to addTodoForm function
+
+    const daysOfWeek = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday'
+    ]
+
+
+}
+
+function addTodoForm(projectName, todo) {
     // Create a form and add to modal
     const todoForm = document.createElement('div');
     todoForm.classList.add('todo-form');
@@ -342,11 +361,29 @@ function addTodoForm(projectName) {
 
     const todoTypes = ['today', 'daily', 'weekly', 'monthly'];
 
-    for (let i = 0; i < todoTypes.length;i++) {
-        let option = document.createElement('option');
-        option.value = todoTypes[i]
-        option.innerText = todoTypes[i][0].toUpperCase() + todoTypes[i].slice(1)
-        todoType.appendChild(option)
+    if(todo === 'weekly') {
+        const daysOfWeek = [
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday'
+        ]
+        for (let i = 0; i < daysOfWeek.length;i++) {
+            let option = document.createElement('option');
+            option.value = daysOfWeek[i]
+            option.innerText = daysOfWeek[i][0].toUpperCase() + daysOfWeek[i].slice(1)
+            todoType.appendChild(option)
+        }
+    } else {
+        for (let i = 0; i < todoTypes.length;i++) {
+            let option = document.createElement('option');
+            option.value = todoTypes[i]
+            option.innerText = todoTypes[i][0].toUpperCase() + todoTypes[i].slice(1)
+            todoType.appendChild(option)
+        }
     }
 
     closeBtn.addEventListener('click', () => {
@@ -434,10 +471,8 @@ function addNewProject() {
     })
 
     submitBtn.addEventListener('click', () => {
-        console.log("New project name: ", projectName.value)
         addProject(projectName.value)
         closeModal();
-        console.log("PRJECT NAME", projectName.value)
         loadPage(projectName.value, 'today');
     })
     modal.style.display = 'block';
@@ -489,6 +524,40 @@ function loadTodoBox(todo) {
         weeklyBox.style.display = 'none';
         monthlyBox.style.display = 'flex';
     }
+}
+
+function loadWeekly(projectName) {
+    // Create a weekly todo container where you can choose and add todos based on days of the week, 
+    // returns a div with 7 boxes for each day of the week
+    let daysOfWeek = [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday'
+    ]
+
+    let weekdayDiv = document.createElement('div');
+    weekdayDiv.classList.add('weekly')
+
+    for(let i = 0; i < daysOfWeek.length;i++) {
+        let day = document.createElement('div')
+        day.classList.add('calendar-day')
+
+        day.addEventListener('click', () => {
+            let modal = document.querySelectorAll('.modal')
+            modal[0].innerHTML = '';
+            console.log("MODAL", modal)
+            let todoForm = addTodoForm(projectName);
+            modal[0].appendChild(todoForm);
+            openModal(modal);
+        })
+        day.innerText = daysOfWeek[i][0].toUpperCase() + daysOfWeek[i].slice(1);
+        weekdayDiv.appendChild(day);
+    }
+    return weekdayDiv;
 }
 
 

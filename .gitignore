@@ -1,5 +1,9 @@
 grid-practice.html
 ./calculator/.eslintrc.json
+<<<<<<< HEAD
 node_modules
 package-lock.json
 package.json
+=======
+node_modules
+>>>>>>> fdb4e0a160a91e102c2f816e8db6682f0d6be9a6
