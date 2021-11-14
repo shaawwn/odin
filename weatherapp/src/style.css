@@ -1,0 +1,42 @@
+html, body {
+    margin: 0px;
+    height: 100%;
+    background-image: url('./images/dusk2.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.search-form {
+    margin: auto;
+    width: 200px;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+    color: white;
+    text-align: center;
+}
+
+.weather-container > p {
+    font-size: 24px;
+}
+
+.weather-container > .current-temp {
+    font-size: 120px;
+    margin:0px;
+}
+
+.test {
+    height: 1000px;
+    /* background-color: green; */
+    background-image: url('./images/dawn2.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+}
